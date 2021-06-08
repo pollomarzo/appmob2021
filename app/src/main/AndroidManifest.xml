@@ -11,9 +11,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PantryFin">
         <activity
-            android:name=".ui.browseItems.BrowseItemsActivity"
-            android:screenOrientation="fullSensor" />
-        <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="fullSensor"/>

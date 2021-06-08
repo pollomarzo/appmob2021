@@ -8,26 +8,37 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.add
+import androidx.fragment.app.commit
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.example.pantryfin.R
 import com.example.pantryfin.data.NetworkOp
-import com.example.pantryfin.ui.browseItems.BrowseItemsActivity
+import com.example.pantryfin.ui.browseItems.BrowseItemsFragment
+import com.example.pantryfin.ui.browseItems.BrowseItemsViewModel
 import kotlinx.coroutines.MainScope
 import org.json.JSONObject
 
-const val itemsURL = "https://lam21.modron.network/products?code="
+const val itemsURL = "https://lam21.modron.network/products?barcode="
 
 class AddItemActivity : AppCompatActivity() {
 
     private val scope = MainScope()
     private lateinit var editItemCodeView: EditText
+    private val model: BrowseItemsViewModel by viewModels()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item)
         editItemCodeView = findViewById(R.id.edit_item_code)
+
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            add<BrowseItemsFragment>(R.id.fragment_container_view)
+        }
+
 
         val button = findViewById<Button>(R.id.button_save)
         button.setOnClickListener {
@@ -35,26 +46,15 @@ class AddItemActivity : AppCompatActivity() {
             if (TextUtils.isEmpty(editItemCodeView.text)) {
                 setResult(Activity.RESULT_CANCELED, replyIntent)
             } else {
-                // simple for now. may move to ViewModel
-               /* val returned = Item(
-                    "0000",
+                val sharedPref = getSharedPreferences(getString(R.string.auth_data_file), Context.MODE_PRIVATE)
+                val accessToken = sharedPref.getString(getString(R.string.access_token_key), "")?:""
+                model.fetchItems(
                     editItemCodeView.text.toString(),
-                    0,
-                    "",
-                    1,
-                    "meat"
+                    accessToken,
+                    NetworkOp.getInstance(applicationContext)
                 )
-                replyIntent.putExtra(EXTRA_REPLY, Json.encodeToString(returned))
-                setResult(Activity.RESULT_OK, replyIntent)*/
-                browseResults()
             }
         }
-    }
-
-    private fun browseResults() {
-        val intent = Intent(this.applicationContext, BrowseItemsActivity::class.java)
-        intent.putExtra(Intent.EXTRA_TEXT, editItemCodeView.text.toString())
-        startActivity(intent)
     }
 
     companion object {

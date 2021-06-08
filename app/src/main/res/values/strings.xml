@@ -13,7 +13,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="add_item">add item</string>
-    <string name="button_save">Save</string>
+    <string name="button_search">Search</string>
     <string name="empty_not_saved">Word not saved because it is empty.</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="login_button_string">login</string>

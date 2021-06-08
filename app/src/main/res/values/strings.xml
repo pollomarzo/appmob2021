@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">PantryFin</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_add_item">AddItem</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="add_item">add item</string>
+    <string name="button_save">Save</string>
+    <string name="empty_not_saved">Word not saved because it is empty.</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="login_button_string">login</string>
+    <string name="action_register">register</string>
+    <string name="switch_to_login">Login instead</string>
+    <string name="switch_to_register">Register instead</string>
+    <string name="prompt_username">Pick your username!</string>
+    <string name="invalid_email">Not a valid email address</string>
+    <string name="register_failed">Registration failed</string>
+    <string name="access_token_key">accessToken</string>
+    <string name="auth_data_file">auth_data</string>
+</resources>

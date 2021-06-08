@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- the xmlns:app namespace must be defined in order to leverage the showAsAction option.
+    The reason is that a compatibility library is used to support the showAsAction="ifRoom" option.
+    This option is needed to show the item directly in the action bar as an icon. !-->
+    <item
+        android:id="@+id/miProfile"
+        android:icon="@drawable/ic_profile"
+        app:showAsAction="ifRoom|withText"
+        android:title="Profile">
+    </item>
+</menu>

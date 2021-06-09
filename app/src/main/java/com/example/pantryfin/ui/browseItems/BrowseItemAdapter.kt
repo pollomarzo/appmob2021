@@ -5,33 +5,52 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pantryfin.R
 import com.example.pantryfin.data.items.Item
 
-class BrowseItemAdapter :
+class BrowseItemAdapter(private val selectedColor: Int, private val defaultColor: Int) :
     ListAdapter<Item, BrowseItemAdapter.BrowseItemViewHolder>(ItemsComparator()) {
+    var selected: MutableLiveData<String?> = MutableLiveData()
+
+    private fun setSelected(code: String): Boolean{
+        Log.d("BROWSE_LIST", "currently ${selected.value}, setting selected to $code")
+        val alreadyInside = (selected.value == code)
+
+        if (alreadyInside) selected.value = null else selected.value = code
+        return !alreadyInside
+    }
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BrowseItemViewHolder {
         return BrowseItemViewHolder.create(parent)
     }
 
     override fun onBindViewHolder(holder: BrowseItemViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(holder, current)
+        holder.bind(selected.value, this::setSelected, holder, current,selectedColor, defaultColor)
     }
 
     class BrowseItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val itemName: TextView = itemView.findViewById(R.id.item_browse_name)
         private val itemType: TextView = itemView.findViewById(R.id.item_browse_type)
+        private val cardView: CardView = itemView.findViewById(R.id.card_view)
 
         // this handles replacing the values in the create()d item
-        fun bind(holder: BrowseItemViewHolder, item: Item) {
+        fun bind(selected: String?, setSelected: (String) -> Boolean, holder: BrowseItemViewHolder, item: Item,
+                 selectedColor: Int, defaultColor: Int) {
             // Get element from your dataset at this position and replace the contents of the view
             // with that element
+            val color = if (selected == item.code) selectedColor else defaultColor
+            cardView.setCardBackgroundColor(color)
 
             itemView.setOnClickListener {
+                setSelected(item.code)
                 Log.d(
                     "BROWSE_LIST",
                     "Element $adapterPosition clicked."

@@ -32,7 +32,9 @@ class AddItemActivity : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddItemBinding.inflate(layoutInflater)
+
         // this next line stole one whole ass hour from my day
+        // so much for compile time safety...
         binding.lifecycleOwner = this
 
         setContentView(binding.root)

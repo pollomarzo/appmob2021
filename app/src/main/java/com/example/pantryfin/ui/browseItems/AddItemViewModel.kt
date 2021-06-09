@@ -22,7 +22,6 @@ class AddItemViewModel() : ViewModel() {
     private var _response: MutableLiveData<String> = MutableLiveData("default")
     var response: LiveData<String> = _response
 
-
     private fun getItems(items: BrowseResponse): List<Item> {
         val it = mutableListOf<Item>()
         for (i in items.products) {

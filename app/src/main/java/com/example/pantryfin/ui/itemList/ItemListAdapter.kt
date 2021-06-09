@@ -1,16 +1,17 @@
 package com.example.pantryfin.ui.itemList
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-
 import android.view.ViewGroup
-import android.widget.ImageView
-
+import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.*
 import com.example.pantryfin.R
 import com.example.pantryfin.data.items.Item
 
@@ -37,22 +38,68 @@ class ItemListAdapter : ListAdapter<Item, ItemListAdapter.ItemViewHolder>(ItemsC
     }
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val itemAmount: TextView = itemView.findViewById(R.id.item_amount)
         private val itemName: TextView = itemView.findViewById(R.id.item_name)
+        private val itemDescription: TextView = itemView.findViewById(R.id.item_description)
         private val itemType: TextView = itemView.findViewById(R.id.item_type)
+        private val moreButton: ImageButton = itemView.findViewById(R.id.more_button)
+        private val lessButton: ImageButton = itemView.findViewById(R.id.less_button)
+        private val hiddenView: LinearLayout = itemView.findViewById(R.id.hidden_view);
+        private val cardView: CardView = itemView.findViewById(R.id.card_view)
 
         // this handles replacing the values in the create()d item
         fun bind(holder: ItemViewHolder, item: Item) {
-            // Get element from your dataset at this position and replace the contents of the view
-            // with that element
-
-            // Define click listener for the ViewHolder's View.
-//            v.setOnClickListener(object : View.OnClickListener {
-//                override fun onClick(v: View?) {
-//                    Log.d(TAG, "Element $adapterPosition clicked.")
-//                }
-//            })
+            itemAmount.text = item.amount.toString()
             itemName.text = item.name
             itemType.text = item.type
+            itemDescription.text = item.description
+
+            moreButton.setOnClickListener {
+                itemAmount.text = (itemAmount.text.toString().toInt() + 1).toString()
+            }
+            lessButton.setOnClickListener {
+                itemAmount.text = (itemAmount.text.toString().toInt() - 1).toString()
+            }
+            itemName.setOnClickListener {
+                //hide or show rest
+                switchVisibility(hiddenView)
+            }
+            hiddenView.setOnClickListener {
+                switchVisibility(hiddenView)
+            }
+        }
+
+        private fun switchVisibility(hiddenView: LinearLayout) {
+            if (hiddenView.visibility == View.GONE) {
+                TransitionManager.beginDelayedTransition(
+                    cardView,
+                    AutoTransition()
+                )
+                hiddenView.visibility = View.VISIBLE
+                hiddenView.alpha = 1F
+            } else {
+                TransitionManager.beginDelayedTransition(
+                    cardView,
+                    AutoTransition().addListener(object : TransitionListenerAdapter() {
+                        override fun onTransitionEnd(transition: Transition) {
+                            hiddenView.visibility = View.GONE
+                        }
+                    }
+                    ))
+                // need to trigger the transition... look i don't like this either
+                hiddenView.alpha = 0.99F
+            }
+            /*TransitionListener {
+                hiddenView.visibility = View.GONE
+            })*/
+        }
+
+        class TransitionListener(private val onEnd: () -> Unit) : TransitionListenerAdapter() {
+            override fun onTransitionEnd(transition: Transition) {
+                onEnd()
+                Log.d("TRANSITIONS", "i just called it.")
+                super.onTransitionEnd(transition)
+            }
         }
 
         companion object {

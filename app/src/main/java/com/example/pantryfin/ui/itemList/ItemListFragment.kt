@@ -18,6 +18,7 @@ import com.example.pantryfin.data.items.Item
 import com.example.pantryfin.data.items.ItemViewModel
 import com.example.pantryfin.data.items.ItemViewModelFactory
 import com.example.pantryfin.data.items.ItemsApplication
+import com.example.pantryfin.ui.MarginItemDecoration
 import com.example.pantryfin.ui.addItem.AddItemActivity
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json

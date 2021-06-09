@@ -10,5 +10,6 @@
     <color name="buttonLabel">#FFFFFF</color>
     <color name="fireOpal">#eb5e55</color>
     <color name="blueCrayola">#51e5ff</color>
-
+    <color name="light_green">#71e067</color>
+    <color name="light_red">#f27979</color>
 </resources>

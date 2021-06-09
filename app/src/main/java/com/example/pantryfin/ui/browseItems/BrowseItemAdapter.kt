@@ -16,13 +16,13 @@ import com.example.pantryfin.data.items.Item
 
 class BrowseItemAdapter(private val selectedColor: Int, private val defaultColor: Int) :
     ListAdapter<Item, BrowseItemAdapter.BrowseItemViewHolder>(ItemsComparator()) {
-    var selected: MutableLiveData<String?> = MutableLiveData()
+    var selected: MutableLiveData<Item?> = MutableLiveData()
 
-    private fun setSelected(code: String): Boolean{
-        Log.d("BROWSE_LIST", "currently ${selected.value}, setting selected to $code")
-        val alreadyInside = (selected.value == code)
+    private fun setSelected(item: Item): Boolean{
+        Log.d("BROWSE_LIST", "currently ${selected.value}, setting selected to $item")
+        val alreadyInside = (selected.value == item)
 
-        if (alreadyInside) selected.value = null else selected.value = code
+        if (alreadyInside) selected.value = null else selected.value = item
         return !alreadyInside
     }
 
@@ -42,15 +42,15 @@ class BrowseItemAdapter(private val selectedColor: Int, private val defaultColor
         private val cardView: CardView = itemView.findViewById(R.id.card_view)
 
         // this handles replacing the values in the create()d item
-        fun bind(selected: String?, setSelected: (String) -> Boolean, holder: BrowseItemViewHolder, item: Item,
+        fun bind(selected: Item?, setSelected: (Item) -> Boolean, holder: BrowseItemViewHolder, item: Item,
                  selectedColor: Int, defaultColor: Int) {
             // Get element from your dataset at this position and replace the contents of the view
             // with that element
-            val color = if (selected == item.code) selectedColor else defaultColor
+            val color = if (selected?.code == item.code) selectedColor else defaultColor
             cardView.setCardBackgroundColor(color)
 
             itemView.setOnClickListener {
-                setSelected(item.code)
+                setSelected(item)
                 Log.d(
                     "BROWSE_LIST",
                     "Element $adapterPosition clicked."

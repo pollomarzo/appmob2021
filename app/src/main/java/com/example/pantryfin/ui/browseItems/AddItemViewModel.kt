@@ -1,5 +1,6 @@
 package com.example.pantryfin.ui.browseItems
 
+import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -21,6 +22,27 @@ class AddItemViewModel() : ViewModel() {
     val state: LiveData<SearchState> = _state
     private var _response: MutableLiveData<String> = MutableLiveData("default")
     var response: LiveData<String> = _response
+
+    private var _code: MutableLiveData<String> = MutableLiveData("")
+    var code: LiveData<String> = _code
+
+    var isCodeValid : MutableLiveData<Boolean?> = MutableLiveData(true)
+
+    fun setCode(s: Editable){
+        _code.value = s.toString()
+        validateCode()
+    }
+
+    private fun validateCode(){
+        try {
+            Integer.parseInt(code.value)
+            isCodeValid.value = true
+        } catch(e: Exception){
+            isCodeValid.value = false
+        }
+    }
+
+    var selected: MutableLiveData<Item?> = MutableLiveData()
 
     private fun getItems(items: BrowseResponse): List<Item> {
         val it = mutableListOf<Item>()

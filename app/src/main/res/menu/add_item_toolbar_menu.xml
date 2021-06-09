@@ -5,9 +5,8 @@
     The reason is that a compatibility library is used to support the showAsAction="ifRoom" option.
     This option is needed to show the item directly in the action bar as an icon. !-->
     <item
-        android:id="@+id/miProfile"
-        android:icon="@drawable/ic_profile"
+        android:id="@+id/toolbar_menu_item_new"
         app:showAsAction="ifRoom|withText"
-        android:title="@string/login_button_string">
+        android:title="@string/add_item_button_toolbar">
     </item>
 </menu>

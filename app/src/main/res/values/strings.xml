@@ -14,7 +14,7 @@
     <string name="login_failed">"Login failed"</string>
     <string name="add_item">add item</string>
     <string name="button_search">Search</string>
-    <string name="empty_not_saved">Word not saved because it is empty.</string>
+    <string name="empty_not_saved">Item not saved</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="login_button_string">login</string>
     <string name="action_register">register</string>
@@ -31,4 +31,15 @@
     <string name="search_empty_response">Couldn\'t find anything…</string>
     <string name="search_start">Searching…</string>
     <string name="search_init">Search for your product!</string>
+    <string name="add_item_button_toolbar">Add item</string>
+    <string name="confirm_item_button_toolbar">confirm</string>
+    <string name="name_too_short"><![CDATA[Name must be > 3 chars]]></string>
+    <string name="low_amount"><![CDATA[Amount must be > 0]]></string>
+    <string name="item_name_hint">Pick a name for your item</string>
+    <string name="item_description_hint">Input a description for this item</string>
+    <string name="item_amount_hint">How many have you got?</string>
+    <string name="item_type_hint">What type of item is it?</string>
+    <string name="save_item">Save</string>
+    <string name="bad_barcode">That\'s not a valid code</string>
+    <string name="barcode">code: %1$s</string>
 </resources>

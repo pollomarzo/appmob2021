@@ -1,9 +1,10 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+
         <variable
             name="browseVM"
-            type="com.example.pantryfin.ui.browseItems.AddItemViewModel"/>
+            type="com.example.pantryfin.ui.browseItems.AddItemViewModel" />
     </data>
 
     <LinearLayout
@@ -12,16 +13,24 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/add_item_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize" />
+
         <EditText
             android:id="@+id/edit_item_code"
+            android:afterTextChanged="@{browseVM::setCode}"
+            android:text="@{browseVM.code}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/big_padding"
             android:fontFamily="sans-serif-light"
-            android:inputType="textAutoComplete"
+            android:hint="@string/search_hint"
+            android:inputType="number"
             android:minHeight="@dimen/min_height"
-            android:textSize="18sp"
-            android:hint="@string/search_hint"/>
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="match_parent"

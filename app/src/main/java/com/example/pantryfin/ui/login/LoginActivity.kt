@@ -60,7 +60,6 @@ class LoginActivity : AppCompatActivity() {
 
             // disable login button unless both username / password is valid
             signIn.isEnabled = loginState.isDataValid
-            Log.d("OBSERVER", "")
 
             if (loginState.usernameError != null) {
                 username.error = getString(loginState.usernameError)

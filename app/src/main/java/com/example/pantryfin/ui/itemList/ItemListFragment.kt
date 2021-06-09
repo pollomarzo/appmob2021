@@ -31,7 +31,7 @@ class ItemListFragment() : Fragment() {
         // todo: and if activity is null? like during rotation. maybe it just won't be
         ItemViewModelFactory((activity?.application as ItemsApplication).repository)
     }
-    private val newItemActivityRequestCode = 1
+    private val addItemActivityRequestCode = 1
 
 
 
@@ -79,13 +79,13 @@ class ItemListFragment() : Fragment() {
         val intent = Intent(mContext, AddItemActivity::class.java)
         // todo: consider moving to contract registration
         // https://proandroiddev.com/is-onactivityresult-deprecated-in-activity-results-api-lets-deep-dive-into-it-302d5cf6edd
-        startActivityForResult(intent, newItemActivityRequestCode)
+        startActivityForResult(intent, addItemActivityRequestCode)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         //super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == newItemActivityRequestCode && resultCode == Activity.RESULT_OK) {
+        if (requestCode == addItemActivityRequestCode && resultCode == Activity.RESULT_OK) {
             data?.getStringExtra(AddItemActivity.EXTRA_REPLY)?.let {
                 val item = Json.decodeFromString<Item>(it)
                 itemViewModel.insert(item)

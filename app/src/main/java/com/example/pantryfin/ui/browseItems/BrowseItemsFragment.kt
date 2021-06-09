@@ -34,6 +34,7 @@ class BrowseItemsFragment : Fragment() {
         )
         adapter.selected.observe(viewLifecycleOwner, {
             adapter.notifyDataSetChanged()
+            model.selected.value = adapter.selected.value
         })
 
         recyclerView.adapter = adapter

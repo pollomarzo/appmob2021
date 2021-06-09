@@ -25,4 +25,10 @@
     <string name="register_failed">Registration failed</string>
     <string name="access_token_key">accessToken</string>
     <string name="auth_data_file">auth_data</string>
+    <string name="search_hint">Search for a product!</string>
+    <string name="search_error">Something went wrong… Try again?</string>
+    <string name="search_real_response">Pick your product</string>
+    <string name="search_empty_response">Couldn\'t find anything…</string>
+    <string name="search_start">Searching…</string>
+    <string name="search_init">Search for your product!</string>
 </resources>

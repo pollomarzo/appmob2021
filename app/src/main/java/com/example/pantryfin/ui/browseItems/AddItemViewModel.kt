@@ -8,27 +8,33 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.example.pantryfin.data.NetworkOp
 import com.example.pantryfin.data.items.Item
-import com.example.pantryfin.ui.addItem.AddItemActivity
 import com.example.pantryfin.ui.addItem.itemsURL
 import com.example.pantryfin.ui.login.BrowseResponse
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 
-class BrowseItemsViewModel() : ViewModel() {
-    private var _itemList =  MutableLiveData<List<Item>>()
-    public val itemList: LiveData<List<Item>> = _itemList
+class AddItemViewModel() : ViewModel() {
+    private var _itemList = MutableLiveData<List<Item>>()
+    val itemList: LiveData<List<Item>> = _itemList
+
+    private var _state: MutableLiveData<SearchState> = MutableLiveData(SearchState.INIT)
+    val state: LiveData<SearchState> = _state
+    private var _response: MutableLiveData<String> = MutableLiveData("default")
+    var response: LiveData<String> = _response
+
 
     private fun getItems(items: BrowseResponse): List<Item> {
         val it = mutableListOf<Item>()
-        var idx: Int = 0
         for (i in items.products) {
-            idx++
             it.add(Item(i.barcode, i.name, 0, i.description, 1, "DEFAULT"))
         }
         return it
     }
 
-    fun fetchItems(itemCode: String, accessToken: String, instance: NetworkOp) {
+    fun fetchItems(
+        itemCode: String, accessToken: String, instance: NetworkOp,
+    ) {
+        _state.value = SearchState.SEARCHING
         val reqURL = itemsURL + itemCode
         Log.d("NETWORKING", "asking for products with code $reqURL with token $accessToken")
         //todo handle no access token? or should it be above?
@@ -37,15 +43,34 @@ class BrowseItemsViewModel() : ViewModel() {
                 reqURL,
                 { response ->
                     Log.d("NETWORKING", response.toString())
-                    _itemList.value = getItems(Json.decodeFromString<BrowseResponse>(response.toString()))
+                    _itemList.value =
+                        getItems(Json.decodeFromString<BrowseResponse>(response.toString()))
+                    _state.value =
+                        if (itemList.value?.size == 0) SearchState.NO_ITEMS else SearchState.FOUND_ITEMS
                 },
                 { error ->
                     Log.d("NETWORKING", error.toString())
+                    _state.value = SearchState.ERROR
                     // idfk
                 },
                 accessToken
             )
         )
+    }
+
+    fun updateInfoText(
+        initSearch: String, startSearch: String,
+        emptyResponse: String, realResponse: String,
+        errorSearch: String
+    ) {
+        _response.value = when (_state.value) {
+            SearchState.INIT -> initSearch
+            SearchState.SEARCHING -> startSearch
+            SearchState.FOUND_ITEMS -> realResponse
+            SearchState.NO_ITEMS -> emptyResponse
+            SearchState.ERROR -> errorSearch
+            else -> "WHAT THE HELL"
+        }
     }
 
     class ItemRequest(
@@ -59,6 +84,10 @@ class BrowseItemsViewModel() : ViewModel() {
             params["Authorization"] = "Bearer $accessToken"
             return params
         }
+    }
+
+    enum class SearchState {
+        INIT, SEARCHING, FOUND_ITEMS, NO_ITEMS, ERROR
     }
 
 }

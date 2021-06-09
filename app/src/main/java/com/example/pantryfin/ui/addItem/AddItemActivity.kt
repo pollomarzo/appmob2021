@@ -12,14 +12,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
+import androidx.lifecycle.Observer
 import com.example.pantryfin.R
 import com.example.pantryfin.data.NetworkOp
+import com.example.pantryfin.databinding.ActivityAddItemBinding
 import com.example.pantryfin.ui.browseItems.BrowseItemsFragment
-import com.example.pantryfin.ui.browseItems.BrowseItemsViewModel
+import com.example.pantryfin.ui.browseItems.AddItemViewModel
 import kotlinx.coroutines.MainScope
-import org.json.JSONObject
 
 const val itemsURL = "https://lam21.modron.network/products?barcode="
 
@@ -27,20 +26,37 @@ class AddItemActivity : AppCompatActivity() {
 
     private val scope = MainScope()
     private lateinit var editItemCodeView: EditText
-    private val model: BrowseItemsViewModel by viewModels()
+    private val model: AddItemViewModel by viewModels()
+    private lateinit var binding: ActivityAddItemBinding
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_item)
-        editItemCodeView = findViewById(R.id.edit_item_code)
+        binding = ActivityAddItemBinding.inflate(layoutInflater)
+        // this next line stole one whole ass hour from my day
+        binding.lifecycleOwner = this
 
+        setContentView(binding.root)
+        editItemCodeView = binding.editItemCode
+        binding.browseVM = model
+
+        model.state.observe(this@AddItemActivity, {
+            model.updateInfoText(
+                getString(R.string.search_init),
+                getString(R.string.search_start),
+                getString(R.string.search_empty_response),
+                getString(R.string.search_real_response),
+                getString(R.string.search_error)
+            )
+        } )
+
+        // XML declarative wasn't cooperating so it's here.
         supportFragmentManager.commit {
             setReorderingAllowed(true)
             add<BrowseItemsFragment>(R.id.fragment_container_view)
         }
 
 
-        val button = findViewById<Button>(R.id.button_save)
+        val button = binding.buttonSave
         button.setOnClickListener {
             val replyIntent = Intent()
             if (TextUtils.isEmpty(editItemCodeView.text)) {

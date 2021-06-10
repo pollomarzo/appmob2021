@@ -53,7 +53,7 @@ class LoginDataSource(context: Context) {
         }
 
     fun logout() {
-        // TODO: revoke authentication
+        // i don't think we can logout "for real"
     }
 
     suspend fun register(username: String, email: String, password: String) =

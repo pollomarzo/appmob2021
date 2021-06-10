@@ -4,11 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -23,12 +21,12 @@ import com.example.pantryfin.databinding.ActivityAddItemBinding
 import com.example.pantryfin.ui.browseItems.BrowseItemsFragment
 import com.example.pantryfin.ui.browseItems.AddItemViewModel
 import com.example.pantryfin.ui.login.LoginInfo
-import kotlinx.coroutines.MainScope
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 const val itemsURL = "https://lam21.modron.network/products?barcode="
+const val addItemURL = "https://lam21.modron.network/products"
 
 class AddItemActivity : AppCompatActivity() {
     private val newItemRequestCode: Int = 2
@@ -37,6 +35,7 @@ class AddItemActivity : AppCompatActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityAddItemBinding.inflate(layoutInflater)
         // this next line stole one whole ass hour from my day
         // so much for compile time safety...
@@ -69,15 +68,12 @@ class AddItemActivity : AppCompatActivity() {
 
         val button = binding.buttonSave
         button.setOnClickListener {
-            val sharedPref =
-                getSharedPreferences(getString(R.string.auth_data_file), Context.MODE_PRIVATE)
-            val encodedInfo = sharedPref.getString(getString(R.string.access_token_key), null)
-            if (encodedInfo != null) {
-                val accessToken = Json.decodeFromString<LoginInfo>(encodedInfo).token
+            val token = getAccessToken()
+            if (token != "") {
                 model.fetchItems(
                     // i know this isn't empty or the button would be disabled
                     model.code.value.toString(),
-                    accessToken,
+                    token,
                     NetworkOp.getInstance(applicationContext)
                 )
             } else {
@@ -120,7 +116,6 @@ class AddItemActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         if (item.itemId != android.R.id.home && model.selected.value == null) {
             // create intent to make new item
             val intent = Intent(this, NewItemActivity::class.java)
@@ -139,14 +134,21 @@ class AddItemActivity : AppCompatActivity() {
         if (requestCode == newItemRequestCode && resultCode == Activity.RESULT_OK) {
             data?.getStringExtra(NewItemActivity.NEW_ITEM_REPLY)?.let {
                 val item = Json.decodeFromString<Item>(it)
-                returnToMain(item)
+                returnToMain(item, true)
             }
         }
     }
 
-    private fun returnToMain(item: Item?) {
+    private fun returnToMain(item: Item?, newItem: Boolean = false) {
         val backIntent = Intent()
-        if(item!=null){
+        if (item != null) {
+            val token = getAccessToken()
+            if (newItem && model.sessionToken != "")
+                model.addItemToRemote(
+                    item,
+                    token,
+                    NetworkOp.getInstance(applicationContext)
+                )
             backIntent.putExtra(EXTRA_REPLY, Json.encodeToString(item))
             setResult(Activity.RESULT_OK, backIntent)
         } else setResult(Activity.RESULT_CANCELED, backIntent)
@@ -156,5 +158,13 @@ class AddItemActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_REPLY = "com.example.android.itemlistsql.REPLY"
+    }
+
+    private fun getAccessToken(): String {
+        val sharedPref =
+            getSharedPreferences(getString(R.string.auth_data_file), Context.MODE_PRIVATE)
+        val encodedInfo = sharedPref.getString(getString(R.string.access_token_key), null)
+        if (encodedInfo != null) return Json.decodeFromString<LoginInfo>(encodedInfo).token
+        return ""
     }
 }

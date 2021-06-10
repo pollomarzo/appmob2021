@@ -9,12 +9,16 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.example.pantryfin.data.NetworkOp
 import com.example.pantryfin.data.items.Item
+import com.example.pantryfin.ui.addItem.addItemURL
 import com.example.pantryfin.ui.addItem.itemsURL
 import com.example.pantryfin.ui.login.BrowseResponse
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
+import org.json.JSONObject
 
 class AddItemViewModel() : ViewModel() {
+    var sessionToken: String = ""
+
     private var _itemList = MutableLiveData<List<Item>>()
     val itemList: LiveData<List<Item>> = _itemList
 
@@ -26,14 +30,14 @@ class AddItemViewModel() : ViewModel() {
     private var _code: MutableLiveData<String> = MutableLiveData("")
     var code: LiveData<String> = _code
 
-    var isCodeValid : MutableLiveData<Boolean?> = MutableLiveData(true)
+    var isCodeValid: MutableLiveData<Boolean?> = MutableLiveData(true)
 
-    fun setCode(s: Editable){
+    fun setCode(s: Editable) {
         _code.value = s.toString()
         validateCode()
     }
 
-    private fun validateCode(){
+    private fun validateCode() {
         isCodeValid.value = code.value?.matches(Regex("\\d+"))
     }
 
@@ -52,17 +56,17 @@ class AddItemViewModel() : ViewModel() {
     ) {
         _state.value = SearchState.SEARCHING
         val reqURL = itemsURL + itemCode
-        Log.d("NETWORKING", "asking for products with code $reqURL with token $accessToken")
-        //todo handle no access token? or should it be above?
         instance.addToRequestQueue(
-            ItemRequest(
+            AuthorizedRequest(
                 reqURL,
                 { response ->
                     Log.d("NETWORKING", response.toString())
+                    val responseObj = Json.decodeFromString<BrowseResponse>(response.toString())
                     _itemList.value =
-                        getItems(Json.decodeFromString<BrowseResponse>(response.toString()))
+                        getItems(responseObj)
                     _state.value =
                         if (itemList.value?.size == 0) SearchState.NO_ITEMS else SearchState.FOUND_ITEMS
+                    sessionToken = responseObj.token
                 },
                 { error ->
                     Log.d("NETWORKING", error.toString())
@@ -89,12 +93,34 @@ class AddItemViewModel() : ViewModel() {
         }
     }
 
-    class ItemRequest(
+    fun addItemToRemote(item: Item, token: String, instance: NetworkOp) {
+        val json = JSONObject()
+            .put("token", sessionToken)
+            .put("name", item.name)
+            .put("description", item.description)
+            .put("barcode", item.code)
+            .put("test", true)
+        val jsonObjectRequest = AuthorizedRequest(
+            addItemURL,
+            { response ->
+                Log.d("NETWORKING", "added item $item, received response $response")
+            },
+            { error ->
+                Log.d("NETWORKING", "something went wrong, received error $error")
+            },
+            token,
+            json
+        )
+        instance.addToRequestQueue(jsonObjectRequest)
+    }
+
+    class AuthorizedRequest(
         url: String,
-        response: Response.Listener<org.json.JSONObject>,
+        response: Response.Listener<JSONObject>,
         error: Response.ErrorListener,
-        private val accessToken: String
-    ) : JsonObjectRequest(url, null, response, error) {
+        private val accessToken: String,
+        jsonObject: JSONObject? = null
+    ) : JsonObjectRequest(url, jsonObject, response, error) {
         override fun getHeaders(): MutableMap<String, String> {
             val params = HashMap<String, String>()
             params["Authorization"] = "Bearer $accessToken"

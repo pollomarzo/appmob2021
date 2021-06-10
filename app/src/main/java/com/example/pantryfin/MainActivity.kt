@@ -19,6 +19,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.pantryfin.ui.login.LoginActivity
 import com.example.pantryfin.ui.login.LoginInfo
 import com.example.pantryfin.ui.login.LoginViewModel
+import com.example.pantryfin.ui.login.getDate
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -39,10 +40,27 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_home, R.id.navigation_dashboard))
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.navigation_home, R.id.navigation_dashboard
+            )
+        )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        checkTokenExpired()
+    }
+
+    private fun checkTokenExpired() {
+        val sharedPref =
+            getSharedPreferences(getString(R.string.auth_data_file), Context.MODE_PRIVATE)
+        val encodedInfo = sharedPref.getString(getString(R.string.access_token_key), null)
+        if (encodedInfo != null &&
+            (getDate().toInt() - Json.decodeFromString<LoginInfo>(encodedInfo).dateLogged.toInt()) >= 6
+        ) {
+            logout()
+            loginIfNecessary()
+        }
     }
 
     // inflate icon (s?) and add them to toolbar
@@ -71,29 +89,33 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onOptionsItemClick(item: MenuItem): Boolean {
+        loginIfNecessary()
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun loginIfNecessary() {
         val sharedPref = getSharedPreferences(
             getString(R.string.auth_data_file),
             Context.MODE_PRIVATE
         )
         val codedInfo = sharedPref.getString(getString(R.string.access_token_key), null)
-        val logged = if(codedInfo != null) Json.decodeFromString<LoginInfo>(codedInfo) else null
+        val logged = if (codedInfo != null) Json.decodeFromString<LoginInfo>(codedInfo) else null
 
-        if(logged == null){
+        if (logged == null) {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             Toast.makeText(
                 this,
                 getString(R.string.login_prompt),
-                Toast.LENGTH_LONG).show()
-        }
-        else {
+                Toast.LENGTH_LONG
+            ).show()
+        } else {
             Toast.makeText(
                 this,
                 getString(R.string.login_logged_in, logged.email),
-                Toast.LENGTH_LONG).show()
+                Toast.LENGTH_LONG
+            ).show()
         }
-
-        return super.onOptionsItemSelected(item)
     }
 
     fun logout() {
@@ -101,7 +123,7 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.auth_data_file),
             Context.MODE_PRIVATE
         )
-        with (sharedPref.edit()) {
+        with(sharedPref.edit()) {
             remove(getString(R.string.access_token_key))
             apply()
         }

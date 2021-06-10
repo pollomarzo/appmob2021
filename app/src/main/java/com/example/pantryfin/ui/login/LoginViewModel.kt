@@ -147,7 +147,7 @@ data class LoginInfo(
 
 fun getDate():String {
     // screw local formatting <.<
-    val sdf = SimpleDateFormat("yyyy.MM.dd")
+    val sdf = SimpleDateFormat("yyyyMMdd")
     val date = Calendar.getInstance().time
     return sdf.format(date)
 }

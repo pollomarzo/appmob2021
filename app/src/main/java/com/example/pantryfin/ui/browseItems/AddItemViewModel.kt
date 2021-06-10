@@ -16,6 +16,8 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import org.json.JSONObject
 
+const val rateItemURL = "https://lam21.modron.network/votes"
+
 class AddItemViewModel() : ViewModel() {
     var sessionToken: String = ""
 
@@ -32,6 +34,8 @@ class AddItemViewModel() : ViewModel() {
 
     var isCodeValid: MutableLiveData<Boolean?> = MutableLiveData(true)
 
+    var selected: MutableLiveData<Item?> = MutableLiveData(null)
+
     fun setCode(s: Editable) {
         _code.value = s.toString()
         validateCode()
@@ -41,12 +45,12 @@ class AddItemViewModel() : ViewModel() {
         isCodeValid.value = code.value?.matches(Regex("\\d+"))
     }
 
-    var selected: MutableLiveData<Item?> = MutableLiveData(null)
 
     private fun getItems(items: BrowseResponse): List<Item> {
         val it = mutableListOf<Item>()
         for (i in items.products) {
-            it.add(Item(i.barcode, i.name, 0, i.description, 1, "DEFAULT"))
+            // hijack type field! pirates babyyy
+            it.add(Item(i.barcode, i.name, 0, i.description, 1, i.id))
         }
         return it
     }
@@ -112,6 +116,26 @@ class AddItemViewModel() : ViewModel() {
             json
         )
         instance.addToRequestQueue(jsonObjectRequest)
+    }
+
+    fun rateProduct(accessToken: String, instance: NetworkOp) {
+        val json = JSONObject()
+            .put("token", sessionToken)
+            .put("rating", 1)
+            .put("productId", selected.value?.id)
+        instance.addToRequestQueue(
+            AuthorizedRequest(
+                rateItemURL,
+                { response ->
+                    Log.d("NETWORKING", "rated item ${selected.value}, received $response")
+                },
+                { error ->
+                    Log.d("NETWORKING", "something went wrong while rating, received error $error")
+                },
+                accessToken,
+                json
+            )
+        )
     }
 
     class AuthorizedRequest(

@@ -121,8 +121,12 @@ class AddItemActivity : AppCompatActivity() {
             val intent = Intent(this, NewItemActivity::class.java)
             intent.putExtra(NewItemActivity.NEW_ITEM_CODE_KEY, model.code.value.toString())
             startActivityForResult(intent, newItemRequestCode)
+        } else if (model.selected.value != null) {
+            // confirm choice, notify server and go back to main activity
+            model.rateProduct(getAccessToken(), NetworkOp.getInstance(applicationContext))
+            returnToMain(model.selected.value)
         } else {
-            // confirm choice and go back to main activity
+            // we're not adding anything
             returnToMain(model.selected.value)
         }
         return super.onOptionsItemSelected(item)

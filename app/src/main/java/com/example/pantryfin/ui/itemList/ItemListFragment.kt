@@ -108,7 +108,7 @@ class ItemListFragment() : Fragment() {
         if (requestCode == addItemActivityRequestCode && resultCode == Activity.RESULT_OK) {
             data?.getStringExtra(AddItemActivity.EXTRA_REPLY)?.let {
                 val item = Json.decodeFromString<Item>(it)
-                itemViewModel.insert(item)
+                itemViewModel.insert(item.copy(type=getString(R.string.default_type)))
             }
             Toast.makeText(
                 activity?.applicationContext,

@@ -46,7 +46,8 @@ class BrowseItemAdapter(private val selectedColor: Int, private val defaultColor
                  selectedColor: Int, defaultColor: Int) {
             // Get element from your dataset at this position and replace the contents of the view
             // with that element
-            val color = if (selected?.code == item.code) selectedColor else defaultColor
+            // Use hijacked field item.type
+            val color = if (selected?.type == item.type) selectedColor else defaultColor
             cardView.setCardBackgroundColor(color)
 
             itemView.setOnClickListener {

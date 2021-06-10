@@ -29,7 +29,8 @@ import com.example.pantryfin.data.items.Item
 class ItemListAdapter(
     val increaseAmount: (Item) -> Int,
     val lowerAmount: (Item) -> Int,
-    val deleteItem: (Item) -> Unit) :
+    val deleteItem: (Item) -> Unit
+) :
     ListAdapter<Item, ItemListAdapter.ItemViewHolder>(ItemsComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -53,10 +54,12 @@ class ItemListAdapter(
         private val deleteButton: ImageButton = itemView.findViewById(R.id.delete_button)
 
         // this handles replacing the values in the create()d item
-        fun bind(holder: ItemViewHolder, item: Item,
-                 increaseAmount: (Item) -> Int,
-                 lowerAmount: (Item) -> Int,
-                 deleteItem: (Item) -> Unit) {
+        fun bind(
+            holder: ItemViewHolder, item: Item,
+            increaseAmount: (Item) -> Int,
+            lowerAmount: (Item) -> Int,
+            deleteItem: (Item) -> Unit
+        ) {
             itemAmount.text = item.amount.toString()
             itemName.text = item.name
             itemType.text = item.type
@@ -76,19 +79,22 @@ class ItemListAdapter(
                 switchVisibility(hiddenView, moreButton, lessButton, deleteButton)
             }
             hiddenView.setOnClickListener {
-                switchVisibility(hiddenView,moreButton, lessButton, deleteButton)
+                switchVisibility(hiddenView, moreButton, lessButton, deleteButton)
             }
         }
 
-        private fun switchVisibility(hiddenView: LinearLayout,
-                                     moreButton: ImageButton,
-                                     lessButton: ImageButton,
-                                     deleteButton: ImageButton
+        private fun switchVisibility(
+            hiddenView: LinearLayout,
+            moreButton: ImageButton,
+            lessButton: ImageButton,
+            deleteButton: ImageButton
         ) {
             if (hiddenView.visibility == View.GONE) {
+                val transition = AutoTransition()
+                transition.duration = 35
                 TransitionManager.beginDelayedTransition(
                     cardView,
-                    AutoTransition()
+                    transition
                 )
                 hiddenView.visibility = View.VISIBLE
                 moreButton.visibility = View.GONE
@@ -96,18 +102,21 @@ class ItemListAdapter(
                 deleteButton.visibility = View.VISIBLE
                 hiddenView.alpha = 1F
             } else {
+                val transition = AutoTransition()
+                transition.addListener(object : TransitionListenerAdapter() {
+                    override fun onTransitionEnd(transition: Transition) {
+                        hiddenView.visibility = View.GONE
+                        moreButton.visibility = View.VISIBLE
+                        lessButton.visibility = View.VISIBLE
+                        deleteButton.visibility = View.GONE
+                    }
+                })
                 TransitionManager.beginDelayedTransition(
                     cardView,
-                    AutoTransition().addListener(object : TransitionListenerAdapter() {
-                        override fun onTransitionEnd(transition: Transition) {
-                            hiddenView.visibility = View.GONE
-                            moreButton.visibility = View.VISIBLE
-                            lessButton.visibility = View.VISIBLE
-                            deleteButton.visibility = View.GONE
-                        }
-                    }
-                    ))
+                    transition
+                )
                 // need to trigger the transition... look i don't like this either
+                // alternative was to find out how Scenes work.. no thanks
                 hiddenView.alpha = 0.99F
             }
             /*TransitionListener {

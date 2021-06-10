@@ -45,7 +45,7 @@
     <string name="login_prompt">Please login or register!</string>
     <string name="login_logged_in">Logged in as: %1$s</string>
     <string name="not_logged_in">You are not logged in</string>
-    <string name="title_activity_new_item">Add a new item</string>
+    <string name="title_activity_new_item">Add or edit an item</string>
     <string name="item_name">Item Name:</string>
     <string name="default_type">___</string>
 </resources>

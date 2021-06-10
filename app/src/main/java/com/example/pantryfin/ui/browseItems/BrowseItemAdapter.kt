@@ -4,13 +4,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.AutoTransition
+import androidx.transition.Transition
+import androidx.transition.TransitionListenerAdapter
+import androidx.transition.TransitionManager
 import com.example.pantryfin.R
 import com.example.pantryfin.data.items.Item
 
@@ -38,8 +43,10 @@ class BrowseItemAdapter(private val selectedColor: Int, private val defaultColor
 
     class BrowseItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val itemName: TextView = itemView.findViewById(R.id.item_browse_name)
-        private val itemType: TextView = itemView.findViewById(R.id.item_browse_type)
+        private val itemDescription: TextView = itemView.findViewById(R.id.item_browse_description)
         private val cardView: CardView = itemView.findViewById(R.id.card_view)
+        private val button: ImageButton = itemView.findViewById(R.id.collapse_icon)
+        private val hiddenView: LinearLayout = itemView.findViewById(R.id.hidden_section)
 
         // this handles replacing the values in the create()d item
         fun bind(selected: Item?, setSelected: (Item) -> Boolean, holder: BrowseItemViewHolder, item: Item,
@@ -52,13 +59,35 @@ class BrowseItemAdapter(private val selectedColor: Int, private val defaultColor
 
             itemView.setOnClickListener {
                 setSelected(item)
-                Log.d(
-                    "BROWSE_LIST",
-                    "Element $adapterPosition clicked."
-                )
             }
+            button.setOnClickListener { switchVisibility() }
             itemName.text = item.name
-            itemType.text = item.type
+            itemDescription.text = item.description
+        }
+
+        private fun switchVisibility(){
+            if (hiddenView.visibility == View.GONE) {
+                val transition = AutoTransition()
+                transition.duration = 35
+                TransitionManager.beginDelayedTransition(
+                    cardView,
+                    transition
+                )
+                hiddenView.visibility = View.VISIBLE
+                button.setImageResource(R.drawable.ic_baseline_expand_less_24)
+            } else {
+                val transition = AutoTransition()
+                transition.addListener(object : TransitionListenerAdapter() {
+                    override fun onTransitionEnd(transition: Transition) {
+                        hiddenView.visibility = View.GONE
+                    }
+                })
+                TransitionManager.beginDelayedTransition(
+                    cardView,
+                    transition
+                )
+                button.setImageResource(R.drawable.ic_baseline_expand_more_24)
+            }
         }
 
         companion object {

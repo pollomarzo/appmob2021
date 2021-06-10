@@ -129,9 +129,6 @@ class ItemListAdapter(
                 // alternative was to find out how Scenes work.. no thanks
                 hiddenView.alpha = 0.99F
             }
-            /*TransitionListener {
-                hiddenView.visibility = View.GONE
-            })*/
         }
 
 

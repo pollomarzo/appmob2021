@@ -16,7 +16,7 @@
             android:name=".ui.addItem.NewItemActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:label="@string/title_activity_new_item"
-            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="fullSensor"
             />
         <activity
             android:name=".ui.login.LoginActivity"

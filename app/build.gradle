@@ -54,6 +54,7 @@ dependencies {
     implementation "androidx.activity:activity-ktx:$rootProject.activityVersion"
 
     // barcode scanning
+    implementation 'com.google.zxing:core:3.3.3'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'com.android.support:multidex:1.0.3'
     // Dependencies for working with Architecture components

@@ -1,4 +1,5 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -19,18 +20,36 @@
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize" />
 
-        <EditText
-            android:id="@+id/edit_item_code"
-            android:afterTextChanged="@{browseVM::setCode}"
-            android:text="@{browseVM.code}"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/big_padding"
-            android:fontFamily="sans-serif-light"
-            android:hint="@string/search_hint"
-            android:inputType="number"
-            android:minHeight="@dimen/min_height"
-            android:textSize="18sp" />
+            >
+            <EditText
+                android:id="@+id/edit_item_code"
+                android:afterTextChanged="@{browseVM::setCode}"
+                android:text="@{browseVM.code}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/big_padding"
+                android:fontFamily="sans-serif-light"
+                android:hint="@string/search_hint"
+                android:inputType="number"
+                android:minHeight="@dimen/min_height"
+                android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/camera_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:src="@drawable/ic_baseline_camera_alt_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/edit_item_code"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
         <TextView
             android:layout_width="match_parent"

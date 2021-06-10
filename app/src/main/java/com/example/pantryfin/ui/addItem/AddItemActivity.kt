@@ -21,6 +21,7 @@ import com.example.pantryfin.databinding.ActivityAddItemBinding
 import com.example.pantryfin.ui.browseItems.BrowseItemsFragment
 import com.example.pantryfin.ui.browseItems.AddItemViewModel
 import com.example.pantryfin.ui.login.LoginInfo
+import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -99,6 +100,16 @@ class AddItemActivity : AppCompatActivity() {
                 button.isEnabled = false
             } else button.isEnabled = true
         })
+
+        val cameraButton = binding.cameraButton
+        cameraButton.setOnClickListener {
+            val intentIntegrator = IntentIntegrator(this@AddItemActivity)
+            intentIntegrator.setBeepEnabled(false)
+            intentIntegrator.setCameraId(0)
+            intentIntegrator.setPrompt("SCAN")
+            intentIntegrator.setBarcodeImageEnabled(false)
+            intentIntegrator.initiateScan()
+        }
     }
 
     // inflate icon (s?) and add them to toolbar
@@ -133,13 +144,28 @@ class AddItemActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+        val cameraResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (cameraResult != null){
+            if (cameraResult.contents == null) {
+                Toast.makeText(
+                    this,
+                    "cancelled",
+                    Toast.LENGTH_SHORT).show()
+            } else {
 
-        if (requestCode == newItemRequestCode && resultCode == Activity.RESULT_OK) {
+                Toast.makeText(this,
+                    "Scanned -> " + cameraResult.contents,
+                    Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+        else if (requestCode == newItemRequestCode && resultCode == Activity.RESULT_OK) {
             data?.getStringExtra(NewItemActivity.NEW_ITEM_REPLY)?.let {
                 val item = Json.decodeFromString<Item>(it)
                 returnToMain(item, true)
             }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 

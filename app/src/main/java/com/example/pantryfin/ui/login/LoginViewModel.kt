@@ -12,6 +12,11 @@ import com.example.pantryfin.data.Result
 import com.example.pantryfin.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.text.SimpleDateFormat
+import java.util.*
 
 class LoginViewModel(
     private val loginRepository: LoginRepository,
@@ -64,8 +69,14 @@ class LoginViewModel(
             if (result is Result.Success) {
                 _loginResult.value =
                     LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+
                 with (sharedPref.edit()) {
-                    putString(tokenKey, result.data.token)
+                    putString(
+                        tokenKey,
+                        Json.encodeToString(LoginInfo(
+                            result.data.displayName,
+                            result.data.token,
+                            getDate())))
                     apply()
                 }
             } else {
@@ -126,22 +137,17 @@ class LoginViewModel(
         return !registering || Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 }
-//
-///**
-// * ViewModel provider factory to instantiate LoginViewModel.
-// * Required given LoginViewModel has a non-empty constructor
-// */
-//class LoginViewModelFactory : ViewModelProvider.Factory {
-//
-//    @Suppress("UNCHECKED_CAST")
-//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//        if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-//            return LoginViewModel(
-//                loginRepository = LoginRepository(
-//                    dataSource = LoginDataSource()
-//                )
-//            ) as T
-//        }
-//        throw IllegalArgumentException("Unknown ViewModel class")
-//    }
-//}
+
+@Serializable
+data class LoginInfo(
+    val email: String,
+    val token: String,
+    val dateLogged: String,
+)
+
+fun getDate():String {
+    // screw local formatting <.<
+    val sdf = SimpleDateFormat("yyyy.MM.dd")
+    val date = Calendar.getInstance().time
+    return sdf.format(date)
+}

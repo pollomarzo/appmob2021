@@ -22,6 +22,7 @@ import com.example.pantryfin.data.items.Item
 import com.example.pantryfin.databinding.ActivityAddItemBinding
 import com.example.pantryfin.ui.browseItems.BrowseItemsFragment
 import com.example.pantryfin.ui.browseItems.AddItemViewModel
+import com.example.pantryfin.ui.login.LoginInfo
 import kotlinx.coroutines.MainScope
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -56,7 +57,7 @@ class AddItemActivity : AppCompatActivity() {
                 getString(R.string.search_real_response),
                 getString(R.string.search_error)
             )
-        } )
+        })
 
         // XML declarative wasn't cooperating so it's here.
         supportFragmentManager.commit {
@@ -67,18 +68,26 @@ class AddItemActivity : AppCompatActivity() {
 
         val button = binding.buttonSave
         button.setOnClickListener {
-            //todo next 3 lines are useless
-            val replyIntent = Intent()
-            if (TextUtils.isEmpty(model.code.value)) {
-                setResult(Activity.RESULT_CANCELED, replyIntent)
-            } else {
-                val sharedPref = getSharedPreferences(getString(R.string.auth_data_file), Context.MODE_PRIVATE)
-                val accessToken = sharedPref.getString(getString(R.string.access_token_key), "")?:""
+            val sharedPref =
+                getSharedPreferences(getString(R.string.auth_data_file), Context.MODE_PRIVATE)
+            val encodedInfo = sharedPref.getString(getString(R.string.access_token_key), null)
+            if (encodedInfo != null) {
+                val accessToken = Json.decodeFromString<LoginInfo>(encodedInfo).token
                 model.fetchItems(
+                    // i know this isn't empty or the button would be disabled
                     model.code.value.toString(),
                     accessToken,
                     NetworkOp.getInstance(applicationContext)
                 )
+            } else {
+                val replyIntent = Intent()
+                setResult(Activity.RESULT_CANCELED, replyIntent)
+                Toast.makeText(
+                    this,
+                    getString(R.string.not_logged_in),
+                    Toast.LENGTH_LONG
+                ).show()
+                finish()
             }
         }
         model.selected.observe(this, Observer {
@@ -88,12 +97,13 @@ class AddItemActivity : AppCompatActivity() {
             invalidateOptionsMenu()
         })
         model.isCodeValid.observe(this, {
-            if(!it!!) {
+            if (!it!!) {
                 binding.editItemCode.error = getString(R.string.bad_barcode)
                 button.isEnabled = false
             } else button.isEnabled = true
         })
     }
+
     // inflate icon (s?) and add them to toolbar
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.add_item_toolbar_menu, menu)
@@ -102,8 +112,8 @@ class AddItemActivity : AppCompatActivity() {
                 getString(R.string.add_item_button_toolbar)
             menu?.findItem(R.id.toolbar_menu_item_new)?.isEnabled =
                 model.code.value.toString().isNotEmpty()
-        }
-        else menu?.findItem(R.id.toolbar_menu_item_new)?.title = getString(R.string.confirm_item_button_toolbar)
+        } else menu?.findItem(R.id.toolbar_menu_item_new)?.title =
+            getString(R.string.confirm_item_button_toolbar)
 
         return true
     }
@@ -111,19 +121,15 @@ class AddItemActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // maybe there's a better way to handle this
         Log.d("SELECTED", "selected is ${model.selected.value}")
-        if(model.selected.value == null){
+        if (model.selected.value == null) {
             // create intent to make new item
-            val intent = Intent(this,NewItemActivity::class.java)
+            val intent = Intent(this, NewItemActivity::class.java)
             intent.putExtra(NewItemActivity.NEW_ITEM_CODE_KEY, model.code.value.toString())
             startActivityForResult(intent, newItemRequestCode)
         } else {
             // confirm choice and go back to main activity
             returnToMain(model.selected.value!!)
         }
-        Toast.makeText(
-            this,
-            "CLICKED!",
-            Toast.LENGTH_LONG).show()
         return super.onOptionsItemSelected(item)
     }
 
@@ -139,11 +145,12 @@ class AddItemActivity : AppCompatActivity() {
             Toast.makeText(
                 applicationContext,
                 R.string.empty_not_saved,
-                Toast.LENGTH_LONG).show()
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
-    private fun returnToMain(item: Item){
+    private fun returnToMain(item: Item) {
         val backIntent = Intent()
         backIntent.putExtra(EXTRA_REPLY, Json.encodeToString(item))
         setResult(Activity.RESULT_OK, backIntent)

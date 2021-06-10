@@ -1,8 +1,8 @@
 package com.example.pantryfin
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -11,16 +11,16 @@ import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.activityViewModels
+import androidx.core.view.MenuItemCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.pantryfin.data.NetworkOp
-import com.example.pantryfin.data.items.ItemViewModel
-import com.example.pantryfin.data.items.ItemViewModelFactory
-import com.example.pantryfin.data.items.ItemsApplication
 import com.example.pantryfin.ui.login.LoginActivity
+import com.example.pantryfin.ui.login.LoginInfo
+import com.example.pantryfin.ui.login.LoginViewModel
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class MainActivity : AppCompatActivity() {
 
@@ -48,16 +48,62 @@ class MainActivity : AppCompatActivity() {
     // inflate icon (s?) and add them to toolbar
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
+        val loginItem = menu?.findItem(R.id.miProfile)
+
+        MenuItemCompat.setActionView(loginItem, R.layout.login_button_layout);
+
+        val menuLayout = loginItem?.actionView;
+
+        val loginMenu = menuLayout?.findViewById<Button>(R.id.button_login);
+        loginMenu?.setOnLongClickListener {
+            logout()
+            Toast.makeText(
+                this,
+                "Logged out.",
+                Toast.LENGTH_SHORT
+            ).show();
+            false;
+        }
+        loginMenu?.setOnClickListener {
+            onOptionsItemClick(loginItem)
+        }
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-        Toast.makeText(
-            this,
-            "CLICKED!",
-            Toast.LENGTH_LONG).show()
+    private fun onOptionsItemClick(item: MenuItem): Boolean {
+        val sharedPref = getSharedPreferences(
+            getString(R.string.auth_data_file),
+            Context.MODE_PRIVATE
+        )
+        val codedInfo = sharedPref.getString(getString(R.string.access_token_key), null)
+        val logged = if(codedInfo != null) Json.decodeFromString<LoginInfo>(codedInfo) else null
+
+        if(logged == null){
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            Toast.makeText(
+                this,
+                getString(R.string.login_prompt),
+                Toast.LENGTH_LONG).show()
+        }
+        else {
+            Toast.makeText(
+                this,
+                getString(R.string.login_logged_in, logged.email),
+                Toast.LENGTH_LONG).show()
+        }
+
         return super.onOptionsItemSelected(item)
+    }
+
+    fun logout() {
+        val sharedPref = getSharedPreferences(
+            getString(R.string.auth_data_file),
+            Context.MODE_PRIVATE
+        )
+        with (sharedPref.edit()) {
+            remove(getString(R.string.access_token_key))
+            apply()
+        }
     }
 }

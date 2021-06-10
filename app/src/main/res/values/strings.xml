@@ -42,4 +42,7 @@
     <string name="save_item">Save</string>
     <string name="bad_barcode">That\'s not a valid code</string>
     <string name="barcode">code: %1$s</string>
+    <string name="login_prompt">Please login or register!</string>
+    <string name="login_logged_in">Logged in as: %1$s</string>
+    <string name="not_logged_in">You are not logged in</string>
 </resources>

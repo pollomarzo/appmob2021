@@ -44,6 +44,7 @@ class AddItemActivity : AppCompatActivity() {
 
         val toolbar: Toolbar = binding.addItemToolbar
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
         setContentView(binding.root)
@@ -119,16 +120,15 @@ class AddItemActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // maybe there's a better way to handle this
-        Log.d("SELECTED", "selected is ${model.selected.value}")
-        if (model.selected.value == null) {
+
+        if (item.itemId != android.R.id.home && model.selected.value == null) {
             // create intent to make new item
             val intent = Intent(this, NewItemActivity::class.java)
             intent.putExtra(NewItemActivity.NEW_ITEM_CODE_KEY, model.code.value.toString())
             startActivityForResult(intent, newItemRequestCode)
         } else {
             // confirm choice and go back to main activity
-            returnToMain(model.selected.value!!)
+            returnToMain(model.selected.value)
         }
         return super.onOptionsItemSelected(item)
     }
@@ -141,19 +141,15 @@ class AddItemActivity : AppCompatActivity() {
                 val item = Json.decodeFromString<Item>(it)
                 returnToMain(item)
             }
-        } else {
-            Toast.makeText(
-                applicationContext,
-                R.string.empty_not_saved,
-                Toast.LENGTH_LONG
-            ).show()
         }
     }
 
-    private fun returnToMain(item: Item) {
+    private fun returnToMain(item: Item?) {
         val backIntent = Intent()
-        backIntent.putExtra(EXTRA_REPLY, Json.encodeToString(item))
-        setResult(Activity.RESULT_OK, backIntent)
+        if(item!=null){
+            backIntent.putExtra(EXTRA_REPLY, Json.encodeToString(item))
+            setResult(Activity.RESULT_OK, backIntent)
+        } else setResult(Activity.RESULT_CANCELED, backIntent)
         Log.d("ADD_ITEM", "adding item $item and returning to main")
         finish()
     }
@@ -162,115 +158,3 @@ class AddItemActivity : AppCompatActivity() {
         const val EXTRA_REPLY = "com.example.android.itemlistsql.REPLY"
     }
 }
-
-
-//class AddItem : AppCompatActivity() {
-//    // delegate (vieModels) and delay init (by)
-//    private val addItemViewModel: AddItemViewModel by viewModels {
-//        ItemViewModelFactory((application as ItemsApplication).repository)
-//    }
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//
-//        setContentView(R.layout.activity_add_item)
-//
-//        val code = findViewById<EditText>(R.id.code)
-//        val name = findViewById<EditText>(R.id.name)
-//        val addItemButton = findViewById<Button>(R.id.addItem)
-//        val loading = findViewById<ProgressBar>(R.id.loading)
-//
-//
-//        addItemViewModel.itemFormState.observe(this@AddItem, Observer {
-//            val loginState = it ?: return@Observer
-//
-//            // disable login button unless both username / password is valid
-//            addItemButton.isEnabled = loginState.isDataValid
-//
-//            if (loginState.usernameError != null) {
-//                code.error = getString(loginState.usernameError)
-//            }
-//            if (loginState.passwordError != null) {
-//                name.error = getString(loginState.passwordError)
-//            }
-//        })
-//
-//        addItemViewModel.itemResult.observe(this@AddItem, Observer {
-//            val loginResult = it ?: return@Observer
-//
-//            loading.visibility = View.GONE
-//            if (loginResult.error != null) {
-//                showLoginFailed(loginResult.error)
-//            }
-//            if (loginResult.success != null) {
-//                updateUiWithUser(loginResult.success)
-//            }
-//            setResult(Activity.RESULT_OK)
-//
-//            //Complete and destroy addItem activity once successful
-//            finish()
-//        })
-//
-//        code.afterTextChanged {
-//            addItemViewModel.itemDataChanged(
-//                    code.text.toString(),
-//                    name.text.toString()
-//            )
-//        }
-//
-//        name.apply {
-//            afterTextChanged {
-//                addItemViewModel.itemDataChanged(
-//                        code.text.toString(),
-//                        name.text.toString()
-//                )
-//            }
-//
-//            setOnEditorActionListener { _, actionId, _ ->
-//                when (actionId) {
-//                    EditorInfo.IME_ACTION_DONE ->
-//                        addItemViewModel.addItem(
-//                                code.text.toString(),
-//                                name.text.toString()
-//                        )
-//                }
-//                false
-//            }
-//
-//            addItemButton.setOnClickListener {
-//                loading.visibility = View.VISIBLE
-//                addItemViewModel.run { addItem(code.text.toString(), name.text.toString()) }
-//            }
-//        }
-//    }
-//
-//    private fun updateUiWithUser(model: AddedItemView) {
-//        val welcome = getString(R.string.welcome)
-//        val displayName = model.displayName
-//        // TODO : initiate successful logged in experience
-//        Toast.makeText(
-//                applicationContext,
-//                "$welcome $displayName",
-//                Toast.LENGTH_LONG
-//        ).show()
-//    }
-//
-//    private fun showLoginFailed(@StringRes errorString: Int) {
-//        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
-//    }
-//}
-//
-///**
-// * Extension function to simplify setting an afterTextChanged action to EditText components.
-// */
-//fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-//    this.addTextChangedListener(object : TextWatcher {
-//        override fun afterTextChanged(editable: Editable?) {
-//            afterTextChanged.invoke(editable.toString())
-//        }
-//
-//        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-//
-//        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-//    })
-//}

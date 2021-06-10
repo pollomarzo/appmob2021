@@ -12,11 +12,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PantryFin">
-        <activity android:name=".ui.addItem.NewItemActivity"></activity>
+        <activity
+            android:name=".ui.addItem.NewItemActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:label="@string/title_activity_new_item"
+            android:windowSoftInputMode="adjustPan"
+            />
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/title_activity_login"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="fullSensor"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".ui.addItem.AddItemActivity"
             android:label="@string/title_activity_add_item"

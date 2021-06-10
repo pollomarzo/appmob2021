@@ -4,99 +4,120 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="model"
             type="com.example.pantryfin.ui.addItem.NewItemViewModel" />
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context=".ui.addItem.NewItemActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/new_item_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize" />
 
         <EditText
             android:id="@+id/item_name_field"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginStart="@dimen/huge_padding"
+            android:layout_marginTop="@dimen/big_padding"
+            android:layout_marginEnd="@dimen/huge_padding"
+            android:layout_marginBottom="@dimen/med_padding"
             android:afterTextChanged="@{model::setName}"
+            android:fontFamily="sans-serif-light"
             android:hint="@string/item_name_hint"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:minHeight="@dimen/min_height"
+            android:textSize="18sp" />
+
 
         <EditText
             android:id="@+id/item_description_field"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginStart="@dimen/huge_padding"
+            android:layout_marginTop="@dimen/med_padding"
+            android:layout_marginEnd="@dimen/huge_padding"
+            android:layout_marginBottom="@dimen/med_padding"
             android:afterTextChanged="@{model::setDescription}"
+            android:fontFamily="sans-serif-light"
             android:hint="@string/item_description_hint"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_name_field" />
-
-        <EditText
-            android:id="@+id/item_amount_field"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="24dp"
-            android:afterTextChanged="@{model::setAmount}"
-            android:hint="@string/item_amount_hint"
-            android:inputType="number"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_description_field" />
+            android:inputType="textAutoComplete"
+            android:minHeight="@dimen/min_height"
+            android:minLines="3"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/item_type_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginStart="@dimen/huge_padding"
+            android:layout_marginTop="@dimen/med_padding"
+            android:layout_marginEnd="@dimen/huge_padding"
+            android:layout_marginBottom="@dimen/med_padding"
             android:afterTextChanged="@{model::setType}"
+            android:fontFamily="sans-serif-light"
             android:hint="@string/item_type_hint"
             android:inputType="textAutoComplete"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_amount_field" />
+            android:minHeight="@dimen/min_height"
+            android:textSize="18sp" />
 
-        <Button
-            android:id="@+id/confirm_button"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/item_amount_field"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="43dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="176dp"
-            android:text="@string/save_item"
-            android:enabled="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_type_field"
-            app:layout_constraintVertical_bias="0.0" />
+            android:layout_marginStart="@dimen/huge_padding"
+            android:layout_marginTop="@dimen/med_padding"
+            android:layout_marginEnd="@dimen/huge_padding"
+            android:layout_marginBottom="@dimen/med_padding"
+            android:afterTextChanged="@{model::setAmount}"
+            android:fontFamily="sans-serif-light"
+            android:hint="@string/item_amount_hint"
+            android:inputType="number"
+            android:minHeight="@dimen/min_height"
+            android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/code_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="56dp"
-            android:text=""
-            app:layout_constraintEnd_toStartOf="@+id/confirm_button"
-            app:layout_constraintHorizontal_bias="0.377"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_type_field" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/code_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minHeight="@dimen/min_height"
+                android:text="code: giorgio"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/confirm_button"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.045" />
+
+            <Button
+                android:id="@+id/confirm_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="@string/save_item"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/code_view"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.045" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

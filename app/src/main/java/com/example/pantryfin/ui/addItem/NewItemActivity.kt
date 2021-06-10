@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import com.example.pantryfin.R
 import com.example.pantryfin.data.items.Item
@@ -25,6 +27,10 @@ class NewItemActivity : AppCompatActivity() {
         barcode = intent.getStringExtra(NEW_ITEM_CODE_KEY) ?: ""
         val codeView = binding.codeView
         codeView.text = getString(R.string.barcode,barcode)
+        val toolbar: Toolbar = binding.newItemToolbar
+        setSupportActionBar(toolbar)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
         model = NewItemViewModel()
@@ -49,7 +55,7 @@ class NewItemActivity : AppCompatActivity() {
         }
     }
 
-    fun onComplete() {
+    private fun onComplete() {
         val item = Item(
             barcode,
             model.name.value.toString(),
@@ -62,6 +68,15 @@ class NewItemActivity : AppCompatActivity() {
         backIntent.putExtra(NEW_ITEM_REPLY, Json.encodeToString(item))
         setResult(Activity.RESULT_OK, backIntent)
         finish()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home){
+            val backIntent = Intent()
+            setResult(Activity.RESULT_CANCELED, backIntent)
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     companion object {

@@ -42,7 +42,7 @@ class AddItemViewModel() : ViewModel() {
         }
     }
 
-    var selected: MutableLiveData<Item?> = MutableLiveData()
+    var selected: MutableLiveData<Item?> = MutableLiveData(null)
 
     private fun getItems(items: BrowseResponse): List<Item> {
         val it = mutableListOf<Item>()

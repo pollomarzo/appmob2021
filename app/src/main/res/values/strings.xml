@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">PantryFin</string>
+    <string name="app_name">What\'s in my pant..ry</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="title_activity_add_item">AddItem</string>
+    <string name="title_activity_add_item">Add Item</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
@@ -15,7 +15,7 @@
     <string name="add_item">add item</string>
     <string name="button_search">Search</string>
     <string name="empty_not_saved">Item not saved</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">Login</string>
     <string name="login_button_string">login</string>
     <string name="action_register">register</string>
     <string name="switch_to_login">Login instead</string>
@@ -45,4 +45,6 @@
     <string name="login_prompt">Please login or register!</string>
     <string name="login_logged_in">Logged in as: %1$s</string>
     <string name="not_logged_in">You are not logged in</string>
+    <string name="title_activity_new_item">Add a new item</string>
+    <string name="item_name">Item Name:</string>
 </resources>

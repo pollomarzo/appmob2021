@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -19,9 +18,11 @@ import com.example.pantryfin.data.items.Item
 import com.example.pantryfin.data.items.ItemViewModel
 import com.example.pantryfin.data.items.ItemViewModelFactory
 import com.example.pantryfin.data.items.ItemsApplication
-import com.example.pantryfin.ui.MarginItemDecoration
 import com.example.pantryfin.ui.addItem.AddItemActivity
+import com.example.pantryfin.ui.addItem.NewItemActivity
+import com.example.pantryfin.ui.addItem.NewItemActivity.Companion.EDITED_ITEM_KEY
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class ItemListFragment() : Fragment() {
@@ -34,6 +35,7 @@ class ItemListFragment() : Fragment() {
         ItemViewModelFactory((activity?.application as ItemsApplication).repository)
     }
     private val addItemActivityRequestCode = 1
+    private val editItemRequestCode = 3
 
 
     /**
@@ -78,6 +80,9 @@ class ItemListFragment() : Fragment() {
             },
             getImageId = {
                 getImageId(it)
+            },
+            editItem = {
+                onEdit(it)
             }
         )
         recyclerView.adapter = adapter
@@ -102,25 +107,43 @@ class ItemListFragment() : Fragment() {
         startActivityForResult(intent, addItemActivityRequestCode)
     }
 
+    private fun onEdit(item: Item) {
+        val intent = Intent(mContext, NewItemActivity::class.java)
+        intent.putExtra(EDITED_ITEM_KEY, Json.encodeToString(item))
+        startActivityForResult(intent, editItemRequestCode)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         //super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == addItemActivityRequestCode && resultCode == Activity.RESULT_OK) {
-            data?.getStringExtra(AddItemActivity.EXTRA_REPLY)?.let {
-                val item = Json.decodeFromString<Item>(it)
-                itemViewModel.insert(item.copy(type=getString(R.string.default_type)))
+        if (requestCode == addItemActivityRequestCode) {
+            if (resultCode == Activity.RESULT_OK) {
+                data?.getStringExtra(AddItemActivity.ADDED_ITEM_EXTRA_REPLY)?.let {
+                    val item = Json.decodeFromString<Item>(it)
+                    itemViewModel.insert(item.copy(type = getString(R.string.default_type)))
+                }
+                Toast.makeText(
+                    activity?.applicationContext,
+                    "nice",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    activity?.applicationContext,
+                    R.string.empty_not_saved,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-            Toast.makeText(
-                activity?.applicationContext,
-                "nice",
-                Toast.LENGTH_SHORT
-            ).show()
-        } else {
-            Toast.makeText(
-                activity?.applicationContext,
-                R.string.empty_not_saved,
-                Toast.LENGTH_SHORT
-            ).show()
+        } else if (requestCode==editItemRequestCode) {
+            if (resultCode == Activity.RESULT_OK){
+                //edit the item
+                data?.getStringExtra(NewItemActivity.NEW_ITEM_REPLY)?.let {
+                    val item = Json.decodeFromString<Item>(it)
+                    itemViewModel.update(item)
+                }
+            } else {
+                // do a whole lot of nothing
+            }
         }
     }
 

@@ -4,10 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -32,6 +29,7 @@ class ItemListAdapter(
     val lowerAmount: (Item) -> Int,
     val deleteItem: (Item) -> Unit,
     val getImageId: (String) -> Int,
+    val editItem: (Item) -> Unit
 ) :
     ListAdapter<Item, ItemListAdapter.ItemViewHolder>(ItemsComparator()) {
 
@@ -41,7 +39,7 @@ class ItemListAdapter(
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(holder, current, increaseAmount, lowerAmount, deleteItem, getImageId)
+        holder.bind(holder, current, increaseAmount, lowerAmount, deleteItem, getImageId, editItem)
     }
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -62,8 +60,13 @@ class ItemListAdapter(
             increaseAmount: (Item) -> Int,
             lowerAmount: (Item) -> Int,
             deleteItem: (Item) -> Unit,
-            getImageId: (String) -> Int
+            getImageId: (String) -> Int,
+            editItem: (Item) -> Unit
         ) {
+            itemName.setOnLongClickListener {
+                editItem(item)
+                true
+            }
             itemAmount.text = item.amount.toString()
             itemName.text = item.name
             itemType.text = item.type

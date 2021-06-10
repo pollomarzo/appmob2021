@@ -9,6 +9,8 @@ import com.example.pantryfin.R
 
 class NewItemViewModel : ViewModel() {
 
+    var prevID = 0
+
     private var _name = MutableLiveData<String>("")
     var name: LiveData<String> = _name
 

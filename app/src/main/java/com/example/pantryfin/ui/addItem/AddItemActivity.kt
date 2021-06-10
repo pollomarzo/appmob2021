@@ -153,7 +153,7 @@ class AddItemActivity : AppCompatActivity() {
                     token,
                     NetworkOp.getInstance(applicationContext)
                 )
-            backIntent.putExtra(EXTRA_REPLY, Json.encodeToString(item))
+            backIntent.putExtra(ADDED_ITEM_EXTRA_REPLY, Json.encodeToString(item))
             setResult(Activity.RESULT_OK, backIntent)
         } else setResult(Activity.RESULT_CANCELED, backIntent)
         Log.d("ADD_ITEM", "adding item $item and returning to main")
@@ -161,7 +161,7 @@ class AddItemActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val EXTRA_REPLY = "com.example.android.itemlistsql.REPLY"
+        const val ADDED_ITEM_EXTRA_REPLY = "com.example.android.itemlistsql.REPLY"
     }
 
     private fun getAccessToken(): String {

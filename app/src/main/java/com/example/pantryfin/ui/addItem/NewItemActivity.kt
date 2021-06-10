@@ -4,6 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -15,6 +18,7 @@ import androidx.lifecycle.Observer
 import com.example.pantryfin.R
 import com.example.pantryfin.data.items.Item
 import com.example.pantryfin.databinding.ActivityNewItemBinding
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -71,6 +75,23 @@ class NewItemActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         binding.confirmButton.setOnClickListener {
             onComplete()
         }
+        val prevValue = intent.getStringExtra(EDITED_ITEM_KEY)
+        if (prevValue != null){
+            Log.d("PRESS", "found edit")
+            val item = Json.decodeFromString<Item>(prevValue)
+            // just convert them to any editable and we're good
+            val name = SpannableStringBuilder(item.name)
+            val description = SpannableStringBuilder(item.description)
+            val amount = SpannableStringBuilder(item.amount.toString())
+            model.setName(name)
+            binding.itemNameField.text = name
+            model.setDescription(SpannableStringBuilder(description))
+            binding.itemDescriptionField.text = description
+            model.setAmount(SpannableStringBuilder(item.amount.toString()))
+            binding.itemAmountField.text = amount
+            // save this for updating DB
+            model.prevID = item.id
+        }
 
     }
 
@@ -78,7 +99,7 @@ class NewItemActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         val item = Item(
             barcode,
             model.name.value.toString(),
-            0,
+            model.prevID,
             model.description.value.toString(),
             Integer.parseInt(model.amount.value.toString()),
             model.type.value.toString()
@@ -111,6 +132,7 @@ class NewItemActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     companion object {
         const val NEW_ITEM_REPLY = "com.example.android.newitem.REPLY"
         const val NEW_ITEM_CODE_KEY = "com.example.android.newitem.code"
+        const val EDITED_ITEM_KEY = "com.example.android.newitem.edited"
     }
 
 }

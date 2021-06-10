@@ -35,6 +35,11 @@ class ItemRepository(private val itemDao: ItemDao) {
         itemDao.delete(item)
         return Result.Success(item)
     }
+    @WorkerThread
+    suspend fun update(item: Item) : Result<Item> {
+        itemDao.update(item)
+        return Result.Success(item)
+    }
 
 
 //    // in-memory cache of the loggedInUser object

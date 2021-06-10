@@ -26,7 +26,11 @@ import com.example.pantryfin.data.items.Item
  */
 
 
-class ItemListAdapter : ListAdapter<Item, ItemListAdapter.ItemViewHolder>(ItemsComparator()) {
+class ItemListAdapter(
+    val increaseAmount: (Item) -> Int,
+    val lowerAmount: (Item) -> Int,
+    val deleteItem: (Item) -> Unit) :
+    ListAdapter<Item, ItemListAdapter.ItemViewHolder>(ItemsComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         return ItemViewHolder.create(parent)
@@ -34,7 +38,7 @@ class ItemListAdapter : ListAdapter<Item, ItemListAdapter.ItemViewHolder>(ItemsC
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(holder, current)
+        holder.bind(holder, current, increaseAmount, lowerAmount, deleteItem)
     }
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -46,36 +50,50 @@ class ItemListAdapter : ListAdapter<Item, ItemListAdapter.ItemViewHolder>(ItemsC
         private val lessButton: ImageButton = itemView.findViewById(R.id.less_button)
         private val hiddenView: LinearLayout = itemView.findViewById(R.id.hidden_view);
         private val cardView: CardView = itemView.findViewById(R.id.card_view)
+        private val deleteButton: ImageButton = itemView.findViewById(R.id.delete_button)
 
         // this handles replacing the values in the create()d item
-        fun bind(holder: ItemViewHolder, item: Item) {
+        fun bind(holder: ItemViewHolder, item: Item,
+                 increaseAmount: (Item) -> Int,
+                 lowerAmount: (Item) -> Int,
+                 deleteItem: (Item) -> Unit) {
             itemAmount.text = item.amount.toString()
             itemName.text = item.name
             itemType.text = item.type
             itemDescription.text = item.description
 
             moreButton.setOnClickListener {
-                itemAmount.text = (itemAmount.text.toString().toInt() + 1).toString()
+                itemAmount.text = increaseAmount(item).toString()
             }
             lessButton.setOnClickListener {
-                itemAmount.text = (itemAmount.text.toString().toInt() - 1).toString()
+                itemAmount.text = lowerAmount(item).toString()
+            }
+            deleteButton.setOnClickListener {
+                deleteItem(item)
             }
             itemName.setOnClickListener {
                 //hide or show rest
-                switchVisibility(hiddenView)
+                switchVisibility(hiddenView, moreButton, lessButton, deleteButton)
             }
             hiddenView.setOnClickListener {
-                switchVisibility(hiddenView)
+                switchVisibility(hiddenView,moreButton, lessButton, deleteButton)
             }
         }
 
-        private fun switchVisibility(hiddenView: LinearLayout) {
+        private fun switchVisibility(hiddenView: LinearLayout,
+                                     moreButton: ImageButton,
+                                     lessButton: ImageButton,
+                                     deleteButton: ImageButton
+        ) {
             if (hiddenView.visibility == View.GONE) {
                 TransitionManager.beginDelayedTransition(
                     cardView,
                     AutoTransition()
                 )
                 hiddenView.visibility = View.VISIBLE
+                moreButton.visibility = View.GONE
+                lessButton.visibility = View.GONE
+                deleteButton.visibility = View.VISIBLE
                 hiddenView.alpha = 1F
             } else {
                 TransitionManager.beginDelayedTransition(
@@ -83,6 +101,9 @@ class ItemListAdapter : ListAdapter<Item, ItemListAdapter.ItemViewHolder>(ItemsC
                     AutoTransition().addListener(object : TransitionListenerAdapter() {
                         override fun onTransitionEnd(transition: Transition) {
                             hiddenView.visibility = View.GONE
+                            moreButton.visibility = View.VISIBLE
+                            lessButton.visibility = View.VISIBLE
+                            deleteButton.visibility = View.GONE
                         }
                     }
                     ))
@@ -114,7 +135,7 @@ class ItemListAdapter : ListAdapter<Item, ItemListAdapter.ItemViewHolder>(ItemsC
 
     class ItemsComparator : DiffUtil.ItemCallback<Item>() {
         override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
-            return oldItem === newItem
+            return oldItem.code == newItem.code && oldItem.amount == newItem.amount
         }
 
         override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {

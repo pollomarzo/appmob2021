@@ -60,7 +60,24 @@ class ItemListFragment() : Fragment() {
         val recyclerView = root.findViewById<RecyclerView>(R.id.recycler_items)
         recyclerView.layoutManager = LinearLayoutManager(activity)
 
-        val adapter = ItemListAdapter()
+        val adapter = ItemListAdapter(
+            increaseAmount = {
+                val item = it.copy(amount = it.amount + 1)
+                itemViewModel.update(item)
+                item.amount
+            },
+            lowerAmount = {
+                var item = it.copy()
+                if(it.amount > 0) {
+                    item = it.copy(amount = it.amount - 1)
+                    if (item.amount >= 0) itemViewModel.update(item)
+                }
+                item.amount
+            },
+            deleteItem = {
+                itemViewModel.delete(it)
+            }
+        )
         recyclerView.adapter = adapter
         itemViewModel.allItem.observe(viewLifecycleOwner, Observer { items ->
             // Default method: onChanged

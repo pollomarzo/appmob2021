@@ -12,13 +12,13 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="7dp"
         app:cardBackgroundColor="#FFFFFF"
         card_view:cardCornerRadius="10dp"
         card_view:cardElevation="8dp"
-        android:layout_marginTop="7dp"
-        android:layout_marginBottom="7dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginEnd="2dp"
         card_view:cardPreventCornerOverlap="true">
         <!-- main constraintLayout (whole thing)!-->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,33 +59,54 @@
                     android:textAlignment="center"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/less_button"
+                    app:layout_constraintEnd_toStartOf="@+id/button_area"
                     app:layout_constraintHorizontal_bias="0.729"
                     app:layout_constraintStart_toEndOf="@+id/item_amount"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageButton
-                    android:id="@+id/less_button"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/button_area"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/rounded_background_red"
-                    android:src="@drawable/ic_remove"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/more_button"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/more_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_background_green"
-                    android:src="@drawable/ic_add"
                     app:layout_constraintBottom_toBottomOf="@id/fixed_layout"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.953"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageButton
+                        android:id="@+id/delete_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:backgroundTint="@android:color/transparent"
+                        android:src="@drawable/ic_delete"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/less_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/rounded_background_red"
+                        android:src="@drawable/ic_remove"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/more_button"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/more_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_background_green"
+                        android:src="@drawable/ic_add"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.953"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
             <!-- collapsable part !-->
@@ -151,6 +172,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
 

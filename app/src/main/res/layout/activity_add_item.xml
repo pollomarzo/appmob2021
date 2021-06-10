@@ -1,4 +1,5 @@
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
@@ -24,18 +25,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
+
             <EditText
                 android:id="@+id/edit_item_code"
-                android:afterTextChanged="@{browseVM::setCode}"
-                android:text="@{browseVM.code}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/big_padding"
+                android:afterTextChanged="@{browseVM::setCode}"
                 android:fontFamily="sans-serif-light"
                 android:hint="@string/search_hint"
                 android:inputType="number"
                 android:minHeight="@dimen/min_height"
-                android:textSize="18sp" />
+                android:text="@{browseVM.code}"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="16dp" />
 
             <ImageButton
                 android:id="@+id/camera_button"
@@ -64,7 +69,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/big_padding"
             android:text="@string/button_search"
-            android:textColor="@color/buttonLabel" />
+            android:textColor="@color/white"
+            android:background="@color/design_default_color_primary_dark"/>
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment_container_view"

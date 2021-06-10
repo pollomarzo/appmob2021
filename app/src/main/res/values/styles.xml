@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- The default font for RecyclerView items is too small.
-    The margin is a simple delimiter between the words. -->
-    <style name="word_title">
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:background">@android:color/holo_orange_light</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
+    <!--
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="colorPrimary">@color/purple_700</item>
+        <item name="colorPrimaryDark">@color/purple_500</item>
+        <item name="colorAccent">@color/light_green</item>
+        <item name="android:statusBarColor">@color/purple_700</item>
+        <item name="colorBackgroundFloating">@color/black</item>
     </style>
+    -->
 </resources>

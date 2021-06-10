@@ -54,7 +54,7 @@
             android:minLines="3"
             android:textSize="18sp" />
 
-        <EditText
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/item_type_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,7 +62,6 @@
             android:layout_marginTop="@dimen/med_padding"
             android:layout_marginEnd="@dimen/huge_padding"
             android:layout_marginBottom="@dimen/med_padding"
-            android:afterTextChanged="@{model::setType}"
             android:fontFamily="sans-serif-light"
             android:hint="@string/item_type_hint"
             android:inputType="textAutoComplete"

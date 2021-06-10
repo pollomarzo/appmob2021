@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -29,7 +30,8 @@ import com.example.pantryfin.data.items.Item
 class ItemListAdapter(
     val increaseAmount: (Item) -> Int,
     val lowerAmount: (Item) -> Int,
-    val deleteItem: (Item) -> Unit
+    val deleteItem: (Item) -> Unit,
+    val getImageId: (String) -> Int,
 ) :
     ListAdapter<Item, ItemListAdapter.ItemViewHolder>(ItemsComparator()) {
 
@@ -39,7 +41,7 @@ class ItemListAdapter(
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(holder, current, increaseAmount, lowerAmount, deleteItem)
+        holder.bind(holder, current, increaseAmount, lowerAmount, deleteItem, getImageId)
     }
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -52,13 +54,15 @@ class ItemListAdapter(
         private val hiddenView: LinearLayout = itemView.findViewById(R.id.hidden_view);
         private val cardView: CardView = itemView.findViewById(R.id.card_view)
         private val deleteButton: ImageButton = itemView.findViewById(R.id.delete_button)
+        private val imageView: ImageView = itemView.findViewById(R.id.type_icon)
 
         // this handles replacing the values in the create()d item
         fun bind(
             holder: ItemViewHolder, item: Item,
             increaseAmount: (Item) -> Int,
             lowerAmount: (Item) -> Int,
-            deleteItem: (Item) -> Unit
+            deleteItem: (Item) -> Unit,
+            getImageId: (String) -> Int
         ) {
             itemAmount.text = item.amount.toString()
             itemName.text = item.name
@@ -81,6 +85,9 @@ class ItemListAdapter(
             hiddenView.setOnClickListener {
                 switchVisibility(hiddenView, moreButton, lessButton, deleteButton)
             }
+            Log.d("IMAGES", "asking for image with type ${item.type}," +
+                    " got ${getImageId(item.type)}")
+            imageView.setImageResource(getImageId(item.type))
         }
 
         private fun switchVisibility(
@@ -124,13 +131,6 @@ class ItemListAdapter(
             })*/
         }
 
-        class TransitionListener(private val onEnd: () -> Unit) : TransitionListenerAdapter() {
-            override fun onTransitionEnd(transition: Transition) {
-                onEnd()
-                Log.d("TRANSITIONS", "i just called it.")
-                super.onTransitionEnd(transition)
-            }
-        }
 
         companion object {
             // this handles creating the layout

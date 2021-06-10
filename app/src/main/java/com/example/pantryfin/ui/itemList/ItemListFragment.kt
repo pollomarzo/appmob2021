@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -33,8 +34,6 @@ class ItemListFragment() : Fragment() {
         ItemViewModelFactory((activity?.application as ItemsApplication).repository)
     }
     private val addItemActivityRequestCode = 1
-
-
 
 
     /**
@@ -68,7 +67,7 @@ class ItemListFragment() : Fragment() {
             },
             lowerAmount = {
                 var item = it.copy()
-                if(it.amount > 0) {
+                if (it.amount > 0) {
                     item = it.copy(amount = it.amount - 1)
                     if (item.amount >= 0) itemViewModel.update(item)
                 }
@@ -76,6 +75,9 @@ class ItemListFragment() : Fragment() {
             },
             deleteItem = {
                 itemViewModel.delete(it)
+            },
+            getImageId = {
+                getImageId(it)
             }
         )
         recyclerView.adapter = adapter
@@ -93,7 +95,7 @@ class ItemListFragment() : Fragment() {
         return root
     }
 
-    private fun onAdd(){
+    private fun onAdd() {
         val intent = Intent(mContext, AddItemActivity::class.java)
         // todo: consider moving to contract registration
         // https://proandroiddev.com/is-onactivityresult-deprecated-in-activity-results-api-lets-deep-dive-into-it-302d5cf6edd
@@ -111,13 +113,29 @@ class ItemListFragment() : Fragment() {
             Toast.makeText(
                 activity?.applicationContext,
                 "nice",
-                Toast.LENGTH_LONG).show()
+                Toast.LENGTH_SHORT
+            ).show()
         } else {
             Toast.makeText(
                 activity?.applicationContext,
                 R.string.empty_not_saved,
-                Toast.LENGTH_LONG).show()
+                Toast.LENGTH_SHORT
+            ).show()
         }
+    }
+
+    fun getImageId(type: String): Int {
+        val arrayTypes = resources.getStringArray(R.array.types_array)
+        when (type) {
+            arrayTypes[0] -> return R.drawable.ic_carbs_foreground
+            arrayTypes[1] -> return R.drawable.ic_veggies_foreground
+            arrayTypes[2] -> return R.drawable.ic_proteins_foreground
+            arrayTypes[3] -> return R.drawable.ic_cheese_foreground
+            arrayTypes[4] -> return R.drawable.ic_sweets_foreground
+            arrayTypes[5] -> return R.drawable.ic_fruit_foreground
+            arrayTypes[6] -> return R.drawable.ic_drinks_foreground
+        }
+        return 0
     }
 
 }

@@ -4,7 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
@@ -14,7 +18,7 @@ import com.example.pantryfin.databinding.ActivityNewItemBinding
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class NewItemActivity : AppCompatActivity() {
+class NewItemActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityNewItemBinding
     private lateinit var model: NewItemViewModel
@@ -40,6 +44,20 @@ class NewItemActivity : AppCompatActivity() {
         binding.model = model
         setContentView(binding.root)
 
+        val spinner = binding.itemTypeField
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.types_array,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner
+            spinner.adapter = adapter
+        }
+        spinner.onItemSelectedListener = this
+
+
         model.newItemFormState.observe(this, Observer {
             val state = it ?: return@Observer
             binding.confirmButton.isEnabled = state.isDataValid
@@ -53,6 +71,7 @@ class NewItemActivity : AppCompatActivity() {
         binding.confirmButton.setOnClickListener {
             onComplete()
         }
+
     }
 
     private fun onComplete() {
@@ -78,6 +97,16 @@ class NewItemActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    // spinner functions
+    override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+        model.setType(parent.getItemAtPosition(pos).toString())
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>) {
+        model.setType("")
+    }
+
 
     companion object {
         const val NEW_ITEM_REPLY = "com.example.android.newitem.REPLY"

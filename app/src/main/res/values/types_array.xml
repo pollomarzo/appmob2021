@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="types_array">
+        <item>Carbs</item>
+        <item>Veggies</item>
+        <item>Proteins</item>
+        <item>Cheese</item>
+        <item>Sweets</item>
+        <item>Fruit</item>
+        <item>Alcohol</item>
+        <item>Drinks</item>
+    </string-array>
+</resources>

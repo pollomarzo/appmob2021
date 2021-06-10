@@ -23,11 +23,4 @@ data class Item(
     // type of the product (here for future additions)
     val type: String = "")
 
-//val items = arrayOf(
-//    Item("1","pasta"),
-//    Item("2","vino"),
-//    Item("3","carne"),
-//    Item("4","latte"),
-//    Item("5","shampoo"),
-//    Item("6","giangiovanni"),
-//)
+

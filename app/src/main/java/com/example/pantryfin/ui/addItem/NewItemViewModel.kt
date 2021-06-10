@@ -1,6 +1,7 @@
 package com.example.pantryfin.ui.addItem
 
 import android.text.Editable
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -38,8 +39,9 @@ class NewItemViewModel : ViewModel() {
         validateForm()
     }
 
-    fun setType(s: Editable) {
-        _type.value = s.toString()
+    fun setType(s: String) {
+        Log.d("IMAGES", "setting type to $s")
+        _type.value = s
         validateForm()
     }
 

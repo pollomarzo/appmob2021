@@ -34,12 +34,7 @@ class AddItemViewModel() : ViewModel() {
     }
 
     private fun validateCode(){
-        try {
-            Integer.parseInt(code.value)
-            isCodeValid.value = true
-        } catch(e: Exception){
-            isCodeValid.value = false
-        }
+        isCodeValid.value = code.value?.matches(Regex("\\d+"))
     }
 
     var selected: MutableLiveData<Item?> = MutableLiveData(null)

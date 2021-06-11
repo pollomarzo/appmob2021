@@ -48,4 +48,7 @@
     <string name="title_activity_new_item">Add or edit an item</string>
     <string name="item_name">Item Name:</string>
     <string name="default_type">___</string>
+    <string name="missing_propmpt">"You're missing: "</string>
+    <string name="export_button_text">Copy to clipboard</string>
+    <string name="percentage_prompt">"You have: "</string>
 </resources>

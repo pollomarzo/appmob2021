@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -152,9 +153,11 @@ class AddItemActivity : AppCompatActivity() {
                     "cancelled",
                     Toast.LENGTH_SHORT).show()
             } else {
-
+                val code = SpannableStringBuilder(cameraResult.contents)
+                binding.editItemCode.text = code
+                model.setCode(code)
                 Toast.makeText(this,
-                    "Scanned -> " + cameraResult.contents,
+                    "Scanned correctly!",
                     Toast.LENGTH_SHORT)
                     .show()
             }

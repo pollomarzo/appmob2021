@@ -25,7 +25,6 @@ class ItemRepository(private val itemDao: ItemDao) {
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun insert(item: Item) : Result<Item> {
-        //TODO: can it fail?
         val res = itemDao.insert(item)
         Log.d("RETURNVALUE", res.toString())
         return Result.Success(item)

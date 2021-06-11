@@ -32,7 +32,6 @@ class ItemListFragment() : Fragment() {
     private lateinit var mContext: Context
     private lateinit var fab: View
     private val itemViewModel: ItemViewModel by activityViewModels {
-        // todo: and if activity is null? like during rotation. maybe it just won't be
         ItemViewModelFactory((activity?.application as ItemsApplication).repository)
     }
     private val addItemActivityRequestCode = 1
@@ -41,7 +40,7 @@ class ItemListFragment() : Fragment() {
 
     /**
      * Called when a fragment is first attached to its context.
-     * needed to make sure we have a context for... something?
+     * needed to make sure we have a context for... stuff
      */
     override fun onAttach(context: Context) {
         super.onAttach(context)

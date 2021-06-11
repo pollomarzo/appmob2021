@@ -69,7 +69,7 @@ class NewItemViewModel : ViewModel() {
     private fun isAmountValid(amount: String): Boolean {
         // found out about toIntOrNull too late. handling it weird now.
         val parsed = amount.toIntOrNull() ?: return false
-        return amount == "" || parsed > 0
+        return amount == "" || parsed >= 0
     }
 
 

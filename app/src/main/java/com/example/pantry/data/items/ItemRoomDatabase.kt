@@ -35,9 +35,11 @@ abstract class ItemRoomDatabase : RoomDatabase() {
             itemDao.deleteAll()
 
             // Add sample words.
-            var word = Item("0100", "pane",
-                1, "gianandrea", 1, "giorgio")
-            itemDao.insert(word)
+            var item = Item("0100", "Default Element",
+                1, "This is a default element. Feel free to play with it " +
+                        "or delete it right away. It won't be here on your next restart!",
+                1, "___")
+            itemDao.insert(item)
 
         }
     }

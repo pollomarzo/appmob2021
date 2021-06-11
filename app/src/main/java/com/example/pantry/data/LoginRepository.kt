@@ -3,14 +3,9 @@ package com.example.pantry.data
 import com.example.pantry.data.model.LoggedInUser
 import com.example.pantry.ui.login.RegisteredUser
 
-/**
- * Class that requests authentication and user information from the remote data source and
- * maintains an in-memory cache of login status and user credentials information.
- */
-
 class LoginRepository(val dataSource: LoginDataSource) {
 
-    // in-memory cache of the loggedInUser object
+    // in-memory cache of the loggedInUser object.. even though i never use it
     var user: LoggedInUser? = null
         private set
 
@@ -18,8 +13,6 @@ class LoginRepository(val dataSource: LoginDataSource) {
         get() = user != null
 
     init {
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
         user = null
     }
 

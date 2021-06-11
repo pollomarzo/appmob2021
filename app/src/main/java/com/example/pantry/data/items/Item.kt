@@ -5,8 +5,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
-
-// TODO: make type an enum or something
 @Entity(tableName = "item_table")
 @Serializable
 data class Item(
@@ -20,7 +18,7 @@ data class Item(
     val description: String = "",
     // amount we have in pantry
     val amount: Int = 1,
-    // type of the product (here for future additions)
+    // type of the product
     val type: String = "")
 
 

@@ -30,7 +30,7 @@ class AddItemViewModel() : ViewModel() {
     private var _code: MutableLiveData<String> = MutableLiveData("")
     var code: LiveData<String> = _code
 
-    var isCodeValid: MutableLiveData<Boolean?> = MutableLiveData(true)
+    var isCodeValid: MutableLiveData<Boolean?> = MutableLiveData(false)
 
     var selected: MutableLiveData<Item?> = MutableLiveData(null)
 

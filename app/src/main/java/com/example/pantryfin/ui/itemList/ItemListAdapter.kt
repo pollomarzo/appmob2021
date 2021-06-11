@@ -144,11 +144,17 @@ class ItemListAdapter(
 
     class ItemsComparator : DiffUtil.ItemCallback<Item>() {
         override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
-            return oldItem.id == newItem.id && oldItem.amount == newItem.amount
+            return oldItem.id == newItem.id &&
+                    oldItem.amount == newItem.amount &&
+                    oldItem.type == newItem.type &&
+                    oldItem.description == newItem.description
         }
 
         override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
-            return oldItem.id == newItem.id && oldItem.name == newItem.name && oldItem.code == newItem.code
+            return  oldItem.name == newItem.name &&
+                    oldItem.amount == newItem.amount &&
+                    oldItem.type == newItem.type &&
+                    oldItem.description == newItem.description
         }
     }
 }

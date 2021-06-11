@@ -20,7 +20,7 @@ class NewItemViewModel : ViewModel() {
     private var _amount = MutableLiveData<String>("")
     var amount: LiveData<String> = _amount
 
-    private var _type = MutableLiveData<String>("")
+    private var _type = MutableLiveData<String>("Carbs")
     var type: LiveData<String> = _type
 
     private var _newItemFormState = MutableLiveData<NewItemFormState>()

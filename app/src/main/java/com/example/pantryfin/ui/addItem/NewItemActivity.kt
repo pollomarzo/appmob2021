@@ -27,14 +27,12 @@ class NewItemActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     private lateinit var binding: ActivityNewItemBinding
     private lateinit var model: NewItemViewModel
     private lateinit var barcode: String
+    private var defaultBarcode: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNewItemBinding.inflate(layoutInflater)
 
-        barcode = intent.getStringExtra(NEW_ITEM_CODE_KEY) ?: ""
-        val codeView = binding.codeView
-        codeView.text = getString(R.string.barcode,barcode)
         val toolbar: Toolbar = binding.newItemToolbar
         setSupportActionBar(toolbar)
 
@@ -76,6 +74,7 @@ class NewItemActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             onComplete()
         }
         val prevValue = intent.getStringExtra(EDITED_ITEM_KEY)
+
         if (prevValue != null){
             Log.d("PRESS", "found edit")
             val item = Json.decodeFromString<Item>(prevValue)
@@ -83,15 +82,29 @@ class NewItemActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             val name = SpannableStringBuilder(item.name)
             val description = SpannableStringBuilder(item.description)
             val amount = SpannableStringBuilder(item.amount.toString())
+            val type = item.type
+
             model.setName(name)
             binding.itemNameField.text = name
+
             model.setDescription(SpannableStringBuilder(description))
             binding.itemDescriptionField.text = description
+
             model.setAmount(SpannableStringBuilder(item.amount.toString()))
             binding.itemAmountField.text = amount
+
+            model.setType(type)
+            val index = resources.getStringArray(R.array.types_array).indexOf(type)
+            spinner.setSelection(index)
+
             // save this for updating DB
             model.prevID = item.id
+            Log.d("PRESS", "changing defaultBarcode to ${item.code}")
+            defaultBarcode = item.code
         }
+        val codeView = binding.codeView
+        barcode = intent.getStringExtra(NEW_ITEM_CODE_KEY) ?: defaultBarcode
+        codeView.text = getString(R.string.barcode,barcode)
 
     }
 

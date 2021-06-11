@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -82,6 +83,7 @@ class ItemListFragment() : Fragment() {
                 getImageId(it)
             },
             editItem = {
+                Log.d("PRESS", "item is $it")
                 onEdit(it)
             }
         )
@@ -120,7 +122,7 @@ class ItemListFragment() : Fragment() {
             if (resultCode == Activity.RESULT_OK) {
                 data?.getStringExtra(AddItemActivity.ADDED_ITEM_EXTRA_REPLY)?.let {
                     val item = Json.decodeFromString<Item>(it)
-                    itemViewModel.insert(item.copy(type = getString(R.string.default_type)))
+                    itemViewModel.insert(item)
                 }
                 Toast.makeText(
                     activity?.applicationContext,
@@ -156,9 +158,10 @@ class ItemListFragment() : Fragment() {
             arrayTypes[3] -> return R.drawable.ic_cheese_foreground
             arrayTypes[4] -> return R.drawable.ic_sweets_foreground
             arrayTypes[5] -> return R.drawable.ic_fruit_foreground
-            arrayTypes[6] -> return R.drawable.ic_drinks_foreground
+            arrayTypes[6] -> return R.drawable.ic_alcohol_foreground
+            arrayTypes[7] -> return R.drawable.ic_drinks_foreground
         }
-        return 0
+        return R.drawable.ic_food
     }
 
 }

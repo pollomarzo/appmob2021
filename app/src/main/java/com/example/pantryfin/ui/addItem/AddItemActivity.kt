@@ -135,7 +135,7 @@ class AddItemActivity : AppCompatActivity() {
         } else if (model.selected.value != null) {
             // confirm choice, notify server and go back to main activity
             model.rateProduct(getAccessToken(), NetworkOp.getInstance(applicationContext))
-            returnToMain(model.selected.value)
+            returnToMain(model.selected.value!!.copy(type = getString(R.string.default_type)))
         } else {
             // we're not adding anything
             returnToMain(model.selected.value)

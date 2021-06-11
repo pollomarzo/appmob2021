@@ -161,7 +161,7 @@ class ItemListFragment() : Fragment() {
             arrayTypes[6] -> return R.drawable.ic_alcohol_foreground
             arrayTypes[7] -> return R.drawable.ic_drinks_foreground
         }
-        return R.drawable.ic_food
+        return R.drawable.ic_food_foreground
     }
 
 }

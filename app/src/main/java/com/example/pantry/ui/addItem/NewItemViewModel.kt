@@ -58,7 +58,7 @@ class NewItemViewModel : ViewModel() {
     }
 
     private fun isNameValid(name: String): Boolean {
-        return name.length > 3
+        return name.length > 2
     }
 
     private fun isDescriptionValid(desc: String): Boolean {

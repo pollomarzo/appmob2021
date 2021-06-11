@@ -49,9 +49,8 @@
             android:afterTextChanged="@{model::setDescription}"
             android:fontFamily="sans-serif-light"
             android:hint="@string/item_description_hint"
-            android:inputType="textAutoComplete"
+            android:inputType="textMultiLine"
             android:minHeight="@dimen/min_height"
-            android:minLines="3"
             android:textSize="18sp" />
 
         <androidx.appcompat.widget.AppCompatSpinner

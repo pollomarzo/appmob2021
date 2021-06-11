@@ -6,7 +6,7 @@
 
         <variable
             name="browseVM"
-            type="com.example.pantry.ui.browseItems.AddItemViewModel" />
+            type="com.uni.pantry.ui.addItem.AddItemViewModel" />
     </data>
 
     <LinearLayout

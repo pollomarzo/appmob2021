@@ -6,7 +6,7 @@
     <data>
         <variable
             name="LoginVM"
-            type="com.example.pantry.ui.login.LoginViewModel" />
+            type="com.uni.pantry.ui.login.LoginViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

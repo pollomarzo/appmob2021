@@ -7,7 +7,7 @@
 
         <variable
             name="model"
-            type="com.example.pantryfin.ui.addItem.NewItemViewModel" />
+            type="com.example.pantry.ui.addItem.NewItemViewModel" />
 
     </data>
 

@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.pantryfin.ui.itemList.ItemListFragment"
+        android:name="com.example.pantry.ui.itemList.ItemListFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_list_item" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.pantryfin.ui.dashboard.DashboardFragment"
+        android:name="com.example.pantry.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 

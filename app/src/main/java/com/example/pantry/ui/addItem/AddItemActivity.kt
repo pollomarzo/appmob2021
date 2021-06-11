@@ -84,7 +84,7 @@ class AddItemActivity : AppCompatActivity() {
                 Toast.makeText(
                     this,
                     getString(R.string.not_logged_in),
-                    Toast.LENGTH_LONG
+                    Toast.LENGTH_SHORT
                 ).show()
                 finish()
             }

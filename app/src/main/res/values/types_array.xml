@@ -9,5 +9,6 @@
         <item>Fruit</item>
         <item>Alcohol</item>
         <item>Drinks</item>
+        <item>Other</item>
     </string-array>
 </resources>
